@@ -2,6 +2,7 @@ package chess;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
+ * Basically, an array that holds a little array with a chess piece and a position
  * <p>
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
