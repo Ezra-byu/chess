@@ -7,23 +7,27 @@ package chess;
  * signature of the existing methods.
  */
 public class ChessMove {
+    private ChessPosition startposition;
+    private ChessPosition endposition;
 
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
+        startposition = startPosition;
+        endposition = endPosition;
     }
 
     /**
      * @return ChessPosition of starting location
      */
     public ChessPosition getStartPosition() {
-        throw new RuntimeException("Not implemented");
+        return startposition;
     }
 
     /**
      * @return ChessPosition of ending location
      */
     public ChessPosition getEndPosition() {
-        throw new RuntimeException("Not implemented");
+        return endposition;
     }
 
     /**
@@ -38,6 +42,9 @@ public class ChessMove {
 
     @Override
     public String toString() {
-        return super.toString();
+        return "ChessMove{" +
+                "startposition=" + startposition +
+                ", endposition=" + endposition +
+                '}';
     }
 }
