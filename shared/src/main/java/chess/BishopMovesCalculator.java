@@ -20,12 +20,13 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
         this.board = board;
     }
     @Override
-    public void pieceMoves(ChessBoard board, ChessPosition position) {
+    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
         //left (row -1), up (col +1)
         diagonalChecker(1, 1, board, position);
         diagonalChecker(1, -1, board, position);
         diagonalChecker(-1, 1, board, position);
         diagonalChecker(-1, -1, board, position);
+        return moves_Set;
     }
     private void diagonalChecker(int rowincr, int colincr, ChessBoard board, ChessPosition position) {
         while(0 <= row && row <= 8 && 0 <= col && col <= 8){

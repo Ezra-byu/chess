@@ -4,5 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public interface PieceMovesCalculator {//piecemovescalculatorable
-    public void pieceMoves(ChessBoard board, ChessPosition position);
+    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position);
+
 }

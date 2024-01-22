@@ -55,7 +55,8 @@ public class ChessPiece {
         piece = board.getPiece(myPosition);
         if (piece.getPieceType() == ChessPiece.PieceType.BISHOP) {
             BishopMovesCalculator bishopmoves = new BishopMovesCalculator(piece, board);
+            return bishopmoves.pieceMoves(board, myPosition);
         }
-        return new ArrayList<>();
+        return null;
     }
 }
