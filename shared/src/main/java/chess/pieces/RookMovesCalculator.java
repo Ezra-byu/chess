@@ -1,50 +1,40 @@
-package chess;
+package chess.pieces;
 
-import java.util.ArrayList;
+import chess.*;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BishopMovesCalculator implements PieceMovesCalculator {
+public class RookMovesCalculator implements PieceMovesCalculator {
     private ChessPiece piece;
     private ChessBoard board;
     private int row;
     private int col;
-    private int rowincr;
-    private int colincr;
     private ChessPosition tempposition;
-
     Set<ChessMove> moves_Set = new HashSet<ChessMove>();
-    public BishopMovesCalculator(ChessPiece piece, ChessBoard board) {
+    public RookMovesCalculator(ChessPiece piece, ChessBoard board) {
         this.piece = piece;
         this.board = board;
     }
+
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
-        //left (row -1), up (col +1)
-        diagonalChecker(1, 1, board, position);
-        diagonalChecker(1, -1, board, position);
-        diagonalChecker(-1, 1, board, position);
-        diagonalChecker(-1, -1, board, position);
+        orthogonalChecker(0, 1, board, position);
+        orthogonalChecker(0, -1, board, position);
+        orthogonalChecker(1, 0, board, position);
+        orthogonalChecker(-1, 0, board, position);
         System.out.println("out of loop");
         //moves_Set.add(new ChessMove(new ChessPosition(1 , 1), new ChessPosition(1 , 1), null));
         return moves_Set;
     }
-    private void diagonalChecker(int rowincr, int colincr, ChessBoard board, ChessPosition position) {
+    private void orthogonalChecker(int rowincr, int colincr, ChessBoard board, ChessPosition position) {
 //        System.out.println("in loop");
         row = position.getRow() ;
         col = position.getColumn();
         row += rowincr;
         col += colincr;
-//        System.out.println(row);
-//        System.out.println(col);
-//        while ((row >= 0) && (row <= 8) && (col >= 0) && (col <= 8)) {
-//            System.out.println("deeper in loop");
-//            row += rowincr;
-//            col += colincr;
-//            System.out.println(row);
-//            System.out.println(col);
-//        }
+
         while((row >= 1) && (row <= 8) && (col >= 1) && (col <= 8)){
             System.out.println("deeper in loop");
             System.out.println(row);
@@ -65,13 +55,8 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
                 //add tempposition to the move array
                 moves_Set.add(new ChessMove(position, tempposition, null));
             }
-            row += rowincr;
-            col += colincr;
+            row += rowincr; //increment row
+            col += colincr; //incrament col
         }
-
     }
-    //row right, row up
-    //row right, row down
-    //row left, row down
-    //create a method that returns a collection of <ChessMove>. Chessmove is start<position>,end<positions>,promotion?
 }
