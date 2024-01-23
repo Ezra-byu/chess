@@ -1,6 +1,7 @@
 package chess;
 
 import chess.pieces.BishopMovesCalculator;
+import chess.pieces.PawnMovesCalculator;
 import chess.pieces.RookMovesCalculator;
 
 import java.util.Collection;
@@ -63,6 +64,10 @@ public class ChessPiece {
         else if (piece.getPieceType() == ChessPiece.PieceType.ROOK) {
             RookMovesCalculator rookmoves = new RookMovesCalculator(piece, board);
             return rookmoves.pieceMoves(board, myPosition);
+        }
+        else if (piece.getPieceType() == PieceType.PAWN) {
+            PawnMovesCalculator pawnmoves = new PawnMovesCalculator(piece, board);
+            return pawnmoves.pieceMoves(board, myPosition);
         }
         return null;
     }
