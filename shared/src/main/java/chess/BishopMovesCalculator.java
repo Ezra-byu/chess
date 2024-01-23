@@ -26,12 +26,29 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
         diagonalChecker(1, -1, board, position);
         diagonalChecker(-1, 1, board, position);
         diagonalChecker(-1, -1, board, position);
+        System.out.println("out of loop");
+        //moves_Set.add(new ChessMove(new ChessPosition(1 , 1), new ChessPosition(1 , 1), null));
         return moves_Set;
     }
     private void diagonalChecker(int rowincr, int colincr, ChessBoard board, ChessPosition position) {
-        while(0 <= row && row <= 8 && 0 <= col && col <= 8){
-            row = position.getRow() + rowincr;
-            col = position.getColumn() + colincr;
+//        System.out.println("in loop");
+        row = position.getRow() ;
+        col = position.getColumn();
+        row += rowincr;
+        col += colincr;
+//        System.out.println(row);
+//        System.out.println(col);
+//        while ((row >= 0) && (row <= 8) && (col >= 0) && (col <= 8)) {
+//            System.out.println("deeper in loop");
+//            row += rowincr;
+//            col += colincr;
+//            System.out.println(row);
+//            System.out.println(col);
+//        }
+        while((row >= 1) && (row <= 8) && (col >= 1) && (col <= 8)){
+            System.out.println("deeper in loop");
+            System.out.println(row);
+            System.out.println(col);
             tempposition = new ChessPosition(row , col); //create the position being investigated
             if (board.getPiece(tempposition) != null) { //if there is a piece in the position being investigated
                 if (board.getPiece(tempposition).getTeamColor() != piece.getTeamColor()){ //if piece not same team
@@ -48,14 +65,10 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
                 //add tempposition to the move array
                 moves_Set.add(new ChessMove(position, tempposition, null));
             }
-
-            //break
-            //elif piece does = curr color)
-            //break
-            //else(is empty)
-            //add the move, continue
-
+            row += rowincr;
+            col += colincr;
         }
+
     }
     //row right, row up
     //row right, row down
