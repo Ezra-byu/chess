@@ -1,7 +1,6 @@
 package chess;
 
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -13,6 +12,11 @@ import java.util.Objects;
 public class ChessBoard {
     private ChessPiece[][] squares = new ChessPiece[8][8];
     private String output_str;
+    Set<ChessPiece> piece_by_team_type_set = new HashSet<ChessPiece>();
+//    Set<ChessPiece> white_pieces_set = new HashSet<ChessPiece>();
+//    Set<ChessPiece> black_pieces_set = new HashSet<ChessPiece>();
+    Set<ChessPiece> white_position_set = new HashSet<ChessPiece>();
+    Set<ChessPiece> black_position_set = new HashSet<ChessPiece>();
     public ChessBoard() {
         
     }
@@ -36,6 +40,49 @@ public class ChessBoard {
      */
     public ChessPiece getPiece(ChessPosition position) {
         return squares[position.getRow()-1][position.getColumn()-1];
+    }
+
+    public Collection<ChessPiece> getPieceByTeamType(ChessPiece.PieceType type, ChessGame.TeamColor team ) {
+        // make piece_by_team_type_set empty
+        piece_by_team_type_set.clear();
+        for(int i=0; i<squares.length; i++) {
+            for(int j=0; j<squares[i].length; j++) {
+                //System.out.println("Values at arr["+i+"]["+j+"] is "+squares[i][j]);
+                //the piece at squares i j type == type and team == team, add to set
+                if((squares[i][j].getPieceType() == type) && (squares[i][j].getTeamColor() == team)){
+                    piece_by_team_type_set.add(squares[i][j]);
+                }
+            }
+        }
+        return piece_by_team_type_set;
+    }
+
+    public Collection<ChessPiece> getWhitePieces() {
+        white_pieces_set.clear();
+        for(int i=0; i<squares.length; i++) {
+            for(int j=0; j<squares[i].length; j++) {
+                //System.out.println("Values at arr["+i+"]["+j+"] is "+squares[i][j]);
+                //the piece at squares i j type == type and team == team, add to set
+                if((squares[i][j].getTeamColor() == ChessGame.TeamColor.WHITE)){
+                    white_pieces_set.add(squares[i][j]);
+                }
+            }
+        }
+        return white_pieces_set;
+    }
+
+    public Collection<ChessPiece> getBlackPieces() {
+        black_pieces_set.clear();
+        for(int i=0; i<squares.length; i++) {
+            for(int j=0; j<squares[i].length; j++) {
+                //System.out.println("Values at arr["+i+"]["+j+"] is "+squares[i][j]);
+                //the piece at squares i j type == type and team == team, add to set
+                if((squares[i][j].getTeamColor() == ChessGame.TeamColor.BLACK)){
+                    black_pieces_set.add(squares[i][j]);
+                }
+            }
+        }
+        return black_pieces_set;
     }
 
     /**
