@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -11,6 +12,7 @@ import java.util.Collection;
 public class ChessGame {
     private TeamColor game_team;
     private ChessBoard game_board;
+    private Collection<ChessPosition> king_danger_zone = new HashSet<ChessPosition>();
     public ChessGame() {
 
     }
@@ -75,9 +77,14 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         //throw new RuntimeException("Not implemented");
-        for (ChessPosition element :game_board.white_pieces_set) {
-            // Implementing for loop
-            element.pieceMoves(game_board, )
+        if (teamColor == TeamColor.BLACK) {
+            for (ChessPosition pos_element : game_board.white_position_set) {
+                //for position in set of positions of white pieces on the board
+                for (ChessMove move_element: game_board.getPiece(pos_element).pieceMoves(game_board, pos_element)){
+                    //for all the moves of that white piece, add the end position to black king danger zone
+                    king_danger_zone.add(move_element.getEndPosition());
+                }
+            }
         }
     }
 
