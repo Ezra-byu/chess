@@ -12,9 +12,10 @@ import java.util.HashSet;
 public class ChessGame {
     private TeamColor game_team;
     private ChessBoard game_board;
+    private ChessBoard temp_stored_board;
+    private Collection<ChessMove> potential_moves = new HashSet<ChessMove>();
     private Collection<ChessPosition> king_danger_zone = new HashSet<ChessPosition>();
     public ChessGame() {
-
     }
 
     /**
@@ -49,14 +50,22 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-
-        //return null if no piece at start position
         if (game_board.getPiece(startPosition) == null){
             return null;
         }
-        //get the piece at the start position.
+        temp_stored_board = game_board;
+        potential_moves = game_board.getPiece(startPosition).pieceMoves(game_board, startPosition);
+        for (ChessMove move_element : potential_moves){
+            tryMove(move_element);
 
-        return null;
+        }
+
+    }
+    public void tryMove(ChessMove move){
+        //replace the piece at the end position
+        game_board.addPiece(move.getEndPosition(), game_board.getPiece(move.getStartPosition()));
+        //set the start position to null (remove piece)
+        game_board.removePiece(move.getStartPosition());
     }
 
     /**
@@ -67,6 +76,12 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         throw new RuntimeException("Not implemented");
+        //check if correct color
+        //check if there is a piece in start position
+        //check if move is ValidMove() put start postion
+        //check if theres a piece there of opp. color and remove it
+        //pawn -> check if promotion
+        //update piece position in ChessBoard
     }
 
     /**
@@ -76,16 +91,38 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        //throw new RuntimeException("Not implemented");
-        if (teamColor == TeamColor.BLACK) {
-            for (ChessPosition pos_element : game_board.white_position_set) {
+        Collection<ChessPosition> kingDangerZone = king_danger_zone;
+        kingDangerZone.clear();
+        if (teamColor == TeamColor.WHITE) {
+            for (ChessPosition pos_element : game_board.getBlackPosition()) {
                 //for position in set of positions of white pieces on the board
                 for (ChessMove move_element: game_board.getPiece(pos_element).pieceMoves(game_board, pos_element)){
                     //for all the moves of that white piece, add the end position to black king danger zone
-                    king_danger_zone.add(move_element.getEndPosition());
+                    kingDangerZone.add(move_element.getEndPosition());
                 }
             }
+            ChessPosition king_pos = game_board.getKingPosition(ChessPiece.PieceType.KING, TeamColor.WHITE);
+            System.out.print("king position:" + king_pos);
+            if (kingDangerZone.contains(king_pos)){
+                System.out.print("white in check");
+                return true;
+            }
         }
+        if (teamColor == TeamColor.BLACK) {
+            for (ChessPosition pos_element : game_board.getWhitePosition()) {
+                //for position in set of positions of white pieces on the board
+                for (ChessMove move_element: game_board.getPiece(pos_element).pieceMoves(game_board, pos_element)){
+                    //for all the moves of that white piece, add the end position to black king danger zone
+                    kingDangerZone.add(move_element.getEndPosition());
+                }
+            }
+            ChessPosition king_pos = game_board.getKingPosition(ChessPiece.PieceType.KING, TeamColor.BLACK);
+            if (kingDangerZone.contains(king_pos)){
+               System.out.print("black in check");
+               return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -117,7 +154,6 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        board.resetBoard();
         game_board = board;
     }
 

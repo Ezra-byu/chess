@@ -40,9 +40,9 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
         row += rowincr;
         col += colincr;
         while((row >= 1) && (row <= 8) && (col >= 1) && (col <= 8)){
-            System.out.println("deeper in loop");
-            System.out.println(row);
-            System.out.println(col);
+            //System.out.println("deeper in loop");
+            //System.out.println(row);
+            //System.out.println(col);
             tempposition = new ChessPosition(row , col); //create the position being investigated
             if (board.getPiece(tempposition) != null) { //if there is a piece in the position being investigated
                 if (board.getPiece(tempposition).getTeamColor() != piece.getTeamColor()){ //if piece not same team

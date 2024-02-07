@@ -12,11 +12,12 @@ import java.util.*;
 public class ChessBoard {
     private ChessPiece[][] squares = new ChessPiece[8][8];
     private String output_str;
-    Set<ChessPiece> piece_by_team_type_set = new HashSet<ChessPiece>();
+    private Set<ChessPiece> piece_by_team_type_set = new HashSet<ChessPiece>();
 //    Set<ChessPiece> white_pieces_set = new HashSet<ChessPiece>();
 //    Set<ChessPiece> black_pieces_set = new HashSet<ChessPiece>();
-    Set<ChessPosition> white_position_set = new HashSet<ChessPosition>();
-    Set<ChessPosition> black_position_set = new HashSet<ChessPosition>();
+    Set<ChessMove> white_move_set = new HashSet<ChessMove>();
+    private Set<ChessPosition> black_position_set = new HashSet<ChessPosition>();
+    private Set<ChessPosition> white_position_set = new HashSet<ChessPosition>();
     public ChessBoard() {
         
     }
@@ -30,6 +31,9 @@ public class ChessBoard {
     public void addPiece(ChessPosition position, ChessPiece piece) {
         squares[position.getRow()-1][position.getColumn()-1] = piece;
     }
+    public void removePiece(ChessPosition position) {
+        squares[position.getRow()-1][position.getColumn()-1] = null;
+    }
 
     /**
      * Gets a chess piece on the chessboard
@@ -42,47 +46,50 @@ public class ChessBoard {
         return squares[position.getRow()-1][position.getColumn()-1];
     }
 
-    public Collection<ChessPiece> getPieceByTeamType(ChessPiece.PieceType type, ChessGame.TeamColor team ) {
+    public ChessPosition getKingPosition(ChessPiece.PieceType type, ChessGame.TeamColor team) {
         // make piece_by_team_type_set empty
-        piece_by_team_type_set.clear();
         for(int i=0; i<squares.length; i++) {
             for(int j=0; j<squares[i].length; j++) {
-                //System.out.println("Values at arr["+i+"]["+j+"] is "+squares[i][j]);
                 //the piece at squares i j type == type and team == team, add to set
-                if((squares[i][j].getPieceType() == type) && (squares[i][j].getTeamColor() == team)){
-                    piece_by_team_type_set.add(squares[i][j]);
+                if((squares[i][j] != null) && (squares[i][j].getPieceType() == type) && (squares[i][j].getTeamColor() == team)){
+                    //System.out.println("Get kingPosition piece: "+squares[i][j]);
+                    //System.out.println("Get kingPosition piece: "+(i+1) +" "+(j+1));
+                    return new ChessPosition((i+1) , (j+1)); //remember, positions are 1-8
                 }
             }
         }
-        return piece_by_team_type_set;
+        return null;
     }
 
-//    public Collection<ChessPiece> getWhitePieces() {
-//        white_pieces_set.clear();
-//        for(int i=0; i<squares.length; i++) {
-//            for(int j=0; j<squares[i].length; j++) {
-//                //System.out.println("Values at arr["+i+"]["+j+"] is "+squares[i][j]);
-//                //the piece at squares i j type == type and team == team, add to set
-//                if((squares[i][j].getTeamColor() == ChessGame.TeamColor.WHITE)){
-//                    white_pieces_set.add(squares[i][j]);
-//                }
-//            }
-//        }
-//        return white_pieces_set;
-//    }
 
     public Collection<ChessPosition> getWhitePosition() {
         white_position_set.clear();
         for(int i=0; i<squares.length; i++) {
             for(int j=0; j<squares[i].length; j++) {
-                //System.out.println("Values at arr["+i+"]["+j+"] is "+squares[i][j]);
                 //the piece at squares i j type == type and team == team, add to set
-                if((squares[i][j].getTeamColor() == ChessGame.TeamColor.BLACK)){
+                if((squares[i][j] != null) && (squares[i][j].getTeamColor() == ChessGame.TeamColor.WHITE)){
+                    //System.out.println("GetwhitePosition piece: "+squares[i][j]);
+                    //System.out.println("GetwhitePosition: "+(i+1) +" "+(j+1));
                     white_position_set.add(new ChessPosition((i+1),(j+1))); //remember, positions are 1-8
                 }
             }
         }
         return white_position_set;
+    }
+
+    public Collection<ChessPosition> getBlackPosition() {
+        black_position_set.clear();
+        for(int i=0; i<squares.length; i++) {
+            for(int j=0; j<squares[i].length; j++) {
+                //the piece at squares i j type == type and team == team, add to set
+                if((squares[i][j] != null) && (squares[i][j].getTeamColor() == ChessGame.TeamColor.BLACK)){
+                    System.out.println("GetblackPosition piece: "+squares[i][j]);
+                    System.out.println("GetblackPosition: "+(i+1) +" "+(j+1));
+                    black_position_set.add(new ChessPosition((i+1),(j+1))); //remember, positions are 1-8
+                }
+            }
+        }
+        return black_position_set;
     }
 
     /**

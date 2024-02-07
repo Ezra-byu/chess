@@ -103,7 +103,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
 
             //try left diagonal black
             proposedposition = new ChessPosition(position.getRow()-1 , position.getColumn()-1);
-            System.out.print(diagIsBlocked(proposedposition));
+            //System.out.print(diagIsBlocked(proposedposition));
             if (isInBounds(proposedposition) && !diagIsBlocked(proposedposition)) {
                 if (blackPromotion(proposedposition)) {
                     moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.QUEEN));
