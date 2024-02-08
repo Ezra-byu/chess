@@ -13,6 +13,7 @@ public class ChessGame {
     private TeamColor game_team;
     private ChessBoard game_board;
     private ChessBoard temp_stored_board;
+    private ChessPiece removed_piece;
     private Collection<ChessMove> potential_moves = new HashSet<ChessMove>();
     private Collection<ChessPosition> king_danger_zone = new HashSet<ChessPosition>();
     public ChessGame() {
@@ -50,22 +51,35 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+        ChessPiece original_piece = game_board.getPiece(startPosition);
         if (game_board.getPiece(startPosition) == null){
             return null;
         }
-        temp_stored_board = game_board;
-        potential_moves = game_board.getPiece(startPosition).pieceMoves(game_board, startPosition);
-        for (ChessMove move_element : potential_moves){
+        potential_moves = original_piece.pieceMoves(game_board, startPosition);
+        for (ChessMove move_element : original_piece.pieceMoves(game_board, startPosition)){
             tryMove(move_element);
-
+            if (isInCheck(original_piece.getTeamColor())){ // game_team can be used because makeMoves ensures the right color is making move
+                potential_moves.remove(move_element);
+            }
+            undoMove(move_element);
+            //set game_board back to before next tryMove
         }
-
+        return potential_moves;
     }
+
+
     public void tryMove(ChessMove move){
         //replace the piece at the end position
+        removed_piece = game_board.getPiece(move.getEndPosition());
         game_board.addPiece(move.getEndPosition(), game_board.getPiece(move.getStartPosition()));
         //set the start position to null (remove piece)
         game_board.removePiece(move.getStartPosition());
+    }
+
+    public void undoMove(ChessMove move){
+        //move the piece at the move's end position to the move's start position
+        game_board.addPiece(move.getStartPosition(), game_board.getPiece(move.getEndPosition()));
+        game_board.addPiece(move.getEndPosition(), removed_piece);
     }
 
     /**
@@ -75,13 +89,30 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
         //check if correct color
+        if(game_board.getPiece(move.getStartPosition()).getTeamColor() != game_team){
+            System.out.print("make move piece team color" + game_board.getPiece(move.getStartPosition()).getTeamColor());
+            throw new InvalidMoveException();
+        }
         //check if there is a piece in start position
         //check if move is ValidMove() put start postion
-        //check if theres a piece there of opp. color and remove it
+        if (!validMoves(move.getStartPosition()).contains(move)){
+            throw new InvalidMoveException();
+        }
+
+        //check if there is a piece there of opp. color and remove it
         //pawn -> check if promotion
         //update piece position in ChessBoard
+
+        if(game_board.getPiece(move.getStartPosition()).getTeamColor() != game_team){
+            throw new InvalidMoveException();
+        }
+        //replace the piece at the end position
+        game_board.addPiece(move.getEndPosition(), game_board.getPiece(move.getStartPosition()));
+        //set the start position to null (remove piece)
+        game_board.removePiece(move.getStartPosition());
+
+        game_team = (game_team == TeamColor.BLACK)? TeamColor.WHITE: TeamColor.BLACK;
     }
 
     /**
@@ -132,7 +163,9 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        ///if valid moves is empty for all teamColor Postitions (stalemate) and (is in check)
+        if (isInCheck(teamColor) && isInStalemate(teamColor)){return true;}
+        else {return false;}
     }
 
     /**
@@ -143,9 +176,24 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
         //repitition of position same position 3 times
         //no valid moves
+        if (teamColor != game_team){ return false;}
+        if (teamColor == TeamColor.WHITE ) {
+            for (ChessPosition pos_element : game_board.getWhitePosition()) {
+                if (!validMoves(pos_element).isEmpty()){
+                    return false;
+                }
+            }
+        }
+        if (teamColor == TeamColor.BLACK) {
+            for (ChessPosition pos_element : game_board.getBlackPosition()) {
+                if (!validMoves(pos_element).isEmpty()){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
