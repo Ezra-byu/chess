@@ -91,12 +91,13 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
             //try right diagonal black
             proposedposition = new ChessPosition(position.getRow()-1 , position.getColumn()+1);
             if (isInBounds(proposedposition) && !diagIsBlocked(proposedposition)) {
-                if (whitePromotion(proposedposition)) { //single move promotion
+                if (blackPromotion(proposedposition)) { //single move promotion
                     moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.QUEEN));
                     moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.BISHOP));
                     moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.ROOK));
                     moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.KNIGHT));
-                } else { //right diag move no promotion black
+                }
+                else { //right diag move no promotion black
                     moves_Set.add(new ChessMove(position, proposedposition, null));
                 }
             }
@@ -110,7 +111,8 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
                     moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.BISHOP));
                     moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.ROOK));
                     moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.KNIGHT));
-                } else { //left diag move no promotion black
+                }
+                else { //left diag move no promotion black
                     moves_Set.add(new ChessMove(position, proposedposition, null));
                 }
             }

@@ -96,7 +96,8 @@ public class ChessGame {
         }
         //check if there is a piece in start position
         //check if move is ValidMove() put start postion
-        if (!validMoves(move.getStartPosition()).contains(move)){
+        Collection<ChessMove> local_valid_moves= validMoves(move.getStartPosition());
+        if (!local_valid_moves.contains(move)){
             throw new InvalidMoveException();
         }
 
@@ -108,7 +109,10 @@ public class ChessGame {
             throw new InvalidMoveException();
         }
         //replace the piece at the end position
-        game_board.addPiece(move.getEndPosition(), game_board.getPiece(move.getStartPosition()));
+        if (move.getPromotionPiece() != null){
+            game_board.addPiece(move.getEndPosition(), new ChessPiece(game_board.getPiece(move.getStartPosition()).getTeamColor(), move.getPromotionPiece()));
+        }
+        else {game_board.addPiece(move.getEndPosition(), game_board.getPiece(move.getStartPosition()));}
         //set the start position to null (remove piece)
         game_board.removePiece(move.getStartPosition());
 
