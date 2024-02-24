@@ -137,9 +137,9 @@ public class ChessGame {
                 }
             }
             ChessPosition king_pos = game_board.getKingPosition(ChessPiece.PieceType.KING, TeamColor.WHITE);
-            System.out.print("king position:" + king_pos);
+//            System.out.print("king position:" + king_pos);
             if (kingDangerZone.contains(king_pos)){
-                System.out.print("white in check");
+//                System.out.print("white in check");
                 return true;
             }
         }
@@ -153,7 +153,7 @@ public class ChessGame {
             }
             ChessPosition king_pos = game_board.getKingPosition(ChessPiece.PieceType.KING, TeamColor.BLACK);
             if (kingDangerZone.contains(king_pos)){
-               System.out.print("black in check");
+//               System.out.print("black in check");
                return true;
             }
         }

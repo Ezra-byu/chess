@@ -83,8 +83,8 @@ public class ChessBoard {
             for(int j=0; j<squares[i].length; j++) {
                 //the piece at squares i j type == type and team == team, add to set
                 if((squares[i][j] != null) && (squares[i][j].getTeamColor() == ChessGame.TeamColor.BLACK)){
-                    System.out.println("GetblackPosition piece: "+squares[i][j]);
-                    System.out.println("GetblackPosition: "+(i+1) +" "+(j+1));
+//                    System.out.println("GetblackPosition piece: "+squares[i][j]);
+//                    System.out.println("GetblackPosition: "+(i+1) +" "+(j+1));
                     black_position_set.add(new ChessPosition((i+1),(j+1))); //remember, positions are 1-8
                 }
             }

@@ -1,6 +1,8 @@
 package server;
 
 import com.google.gson.Gson;
+import model.AuthData;
+import model.RegisterResponse;
 import spark.*;
 import model.UserData;
 import service.UserService;
@@ -36,8 +38,9 @@ public class Server {
 
     private Object register(Request req, Response res) {
         UserData user = new Gson().fromJson(req.body(), UserData.class); //UserData (a data model class) or just User?
-        UserService.register(user);
-        return new Gson().toJson(user);
+        RegisterResponse response = UserService.register(user);
+        res.status(response.responsecode());
+        return new Gson().toJson(response);
     }
 }
 
