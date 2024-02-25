@@ -2,6 +2,7 @@ package server;
 
 import com.google.gson.Gson;
 import model.AuthData;
+import model.BaseResponse;
 import model.RegisterResponse;
 import spark.*;
 import model.UserData;
@@ -37,9 +38,13 @@ public class Server {
     }
 
     private Object register(Request req, Response res) {
+//        UserData user = new Gson().fromJson(req.body(), UserData.class); //UserData (a data model class) or just User?
+//        RegisterResponse response = UserService.register(user);
+//        res.status(response.responsecode());
+//        return new Gson().toJson(response);
         UserData user = new Gson().fromJson(req.body(), UserData.class); //UserData (a data model class) or just User?
-        RegisterResponse response = UserService.register(user);
-        res.status(response.responsecode());
+        BaseResponse response = UserService.register(user);
+        res.status(response.getStatusCode());
         return new Gson().toJson(response);
     }
 }
