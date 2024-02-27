@@ -4,12 +4,12 @@ import com.google.gson.Gson;
 
 public class RegisterResponse extends BaseResponse {
     String username;
-    AuthData auth;
+    String authToken;
 
-    public RegisterResponse(int statuscode, String username, AuthData auth) {
+    public RegisterResponse(int statuscode, String username, String authToken) {
         super(statuscode);
         this.username = username;
-        this.auth = auth;
+        this.authToken = authToken;
     }
 
     public String toString() {

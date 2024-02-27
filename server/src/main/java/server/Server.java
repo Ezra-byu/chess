@@ -42,7 +42,7 @@ public class Server {
 //        RegisterResponse response = UserService.register(user);
 //        res.status(response.responsecode());
 //        return new Gson().toJson(response);
-        UserData user = new Gson().fromJson(req.body(), UserData.class); //UserData (a data model class) or just User?
+        UserData user = new Gson().fromJson(req.body(), UserData.class);
         BaseResponse response = UserService.register(user);
         res.status(response.getStatusCode());
         return new Gson().toJson(response);
