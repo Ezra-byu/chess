@@ -22,6 +22,7 @@ public class Server {
 
         //register
         Spark.post("/user", this::register);
+        Spark.delete("/db", this::clear);
 
         //catch undirected calls
         //server.createContext("/", new FileHandler());
@@ -32,11 +33,17 @@ public class Server {
         return Spark.port();
     }
 
+
     public void stop() {
         Spark.stop();
         Spark.awaitStop();
     }
 
+    private Object clear(Request req, Response res) {
+        BaseResponse response = UserService.clear();
+        res.status(response.getStatusCode());
+        return new Gson().toJson(response);
+    }
     private Object register(Request req, Response res) {
 //        UserData user = new Gson().fromJson(req.body(), UserData.class); //UserData (a data model class) or just User?
 //        RegisterResponse response = UserService.register(user);

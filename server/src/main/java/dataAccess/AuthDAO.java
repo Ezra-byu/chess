@@ -10,4 +10,5 @@ public interface AuthDAO {
     AuthData createAuth(UserData user);
     AuthData getAuth(UserData user);
     void deleteAuth(UserData user);
+    void clearAuth();
 }

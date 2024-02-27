@@ -24,4 +24,6 @@ public class MemoryAuthDAO implements AuthDAO{
     public void deleteAuth(UserData user) {
         auths.remove(user.username()); //to be called with username
     }
+    @Override
+    public void clearAuth(){auths.clear();}
 }

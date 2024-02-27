@@ -1,9 +1,6 @@
 package service;
 
-import dataAccess.AuthDAO;
-import dataAccess.MemoryUserDAO;
-import dataAccess.UserDAO;
-import dataAccess.MemoryAuthDAO;
+import dataAccess.*;
 import model.*;
 
 //The Service classes implement the actual functionality of the server.
@@ -11,6 +8,14 @@ import model.*;
 public class UserService {
     static UserDAO my_userDAO = new MemoryUserDAO(); //change upon completion of SQL database
     static AuthDAO my_authDAO = new MemoryAuthDAO();
+    static GameDAO my_gameDAO = new MemoryGameDAO();
+
+    public static BaseResponse clear(){
+        my_userDAO.clearUser();
+        my_authDAO.clearAuth();
+        my_gameDAO.clearGame();
+        return new ClearResponse(200);
+    }
 
     public static BaseResponse register(UserData user) { //should return AuthData?
         if ((user.username() == null) || (user.password() == null) || (user.email() == null)) {
