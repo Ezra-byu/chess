@@ -78,5 +78,8 @@ public class UserService {
             Collection<GameData> my_games = my_gameDAO.listGames();
             return new ListGameResponse(200, my_games);
         }
+        else{
+            return new ErrorResponse(401, "Error: unauthorized");
+        }
     }
 }
