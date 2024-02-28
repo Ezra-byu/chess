@@ -11,19 +11,24 @@ public class MemoryAuthDAO implements AuthDAO{
     @Override
     public AuthData createAuth(UserData user) {
         AuthData newauth = new AuthData(UUID.randomUUID().toString(), user.username());
-        auths.put(user.username(), newauth);
+        auths.put(newauth.authToken(), newauth);
         return newauth;
     }
 
     @Override
-    public AuthData getAuth(UserData user) {
-        return auths.get(user.username());//returns null if not in auths set
+    public AuthData getAuth(String authToken) {
+        return auths.get(authToken);//returns null if not in auths set
     }
 
     @Override
-    public void deleteAuth(UserData user) {
-        auths.remove(user.username()); //to be called with username
+    public void deleteAuth(AuthData auth) {
+        auths.remove(auth.authToken()); //to be called with username
     }
     @Override
     public void clearAuth(){auths.clear();}
+
+    @Override
+    public Boolean checkAuth(String authToken){
+        return auths.containsKey(authToken);
+    };
 }

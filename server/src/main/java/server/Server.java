@@ -23,6 +23,9 @@ public class Server {
         //register
         Spark.post("/user", this::register);
         Spark.delete("/db", this::clear);
+        Spark.post("/session", this::login);
+        Spark.delete("/session", this::logout);
+        Spark.get("/game", this::listgames);
 
         //catch undirected calls
         //server.createContext("/", new FileHandler());
@@ -51,6 +54,27 @@ public class Server {
 //        return new Gson().toJson(response);
         UserData user = new Gson().fromJson(req.body(), UserData.class);
         BaseResponse response = UserService.register(user);
+        res.status(response.getStatusCode());
+        return new Gson().toJson(response);
+    }
+
+    private Object login(Request req, Response res){
+        UserData user = new Gson().fromJson(req.body(), UserData.class);
+        BaseResponse response = UserService.login(user);
+        res.status(response.getStatusCode());
+        return new Gson().toJson(response);
+    }
+
+    private Object logout(Request req, Response res){
+        String authToken = req.headers("authorization");
+        BaseResponse response = UserService.logout(authToken);
+        res.status(response.getStatusCode());
+        return new Gson().toJson(response);
+    }
+
+    private Object listgames(Request req, Response res){
+        String authToken = req.headers("authorization");
+        BaseResponse response = UserService.listgames(authToken);
         res.status(response.getStatusCode());
         return new Gson().toJson(response);
     }
