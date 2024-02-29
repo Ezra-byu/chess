@@ -100,5 +100,37 @@ public class UserService {
         }
     }
 
-    public static BaseResponse joingame()
+    public static BaseResponse joingame(String playerColor, int gameID, String authToken){
+        //checkAuth
+        //check if desired game exists
+        //if playercolor is WHITE, check if desired game whiteusername() is blank and add it. else save as watcher
+        //if black to opposite
+
+
+        //if my_gameDAO.get_game(gameID)
+        GameData desiredgame = my_gameDAO.getGame(gameID);
+        String username = my_authDAO.getAuth(authToken).username();
+        if(desiredgame == null){
+            return new ErrorResponse(400, "Error: bad request");
+        }
+        if(my_authDAO.checkAuth(authToken)){
+           if(Objects.equals(playerColor, "WHITE")){
+               if (desiredgame.whiteUsername() == null){
+                   my_gameDAO.updateGame(new GameData(desiredgame.gameID(), username, desiredgame.blackUsername(), desiredgame.gameName(), desiredgame.game()));
+               }
+               //else add as watcher
+           }
+           if(Objects.equals(playerColor, "BLACK")){
+               if (desiredgame.blackUsername() == null){
+                   my_gameDAO.updateGame(new GameData(desiredgame.gameID(), desiredgame.whiteUsername(), username, desiredgame.gameName(), desiredgame.game()));
+               }
+               //else add as watcher
+           }
+           return new JoinGameResponse(200);
+        }
+        else{
+            return new ErrorResponse(401, "Error: unauthorized");
+        }
+
+    }
 }

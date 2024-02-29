@@ -88,8 +88,9 @@ public class Server {
     private Object joingame(Request req, Response res){
         String authToken = req.headers("authorization");
         JoinGameRequest joinrequest = new Gson().fromJson(req.body(), JoinGameRequest.class);
-        BaseResponse response = UserService.joingame(game, authToken);
-
+        BaseResponse response = UserService.joingame(joinrequest.playerColor(), joinrequest.gameID(), authToken);
+        res.status(response.getStatusCode());
+        return new Gson().toJson(response);
     }
 }
 

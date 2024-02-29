@@ -18,8 +18,8 @@ public class MemoryGameDAO implements GameDAO{
     }
 
     @Override
-    public GameData getGame(GameData game) {
-        return games.get(game.gameID());
+    public GameData getGame(int gameID) {
+        return games.get(gameID);
     }
 
     @Override
@@ -29,7 +29,9 @@ public class MemoryGameDAO implements GameDAO{
 
     @Override
     public GameData updateGame(GameData game) {
-        return null;
+        games.remove(game.gameID());
+        createGame(game);
+        return game;
     }
 
     @Override
