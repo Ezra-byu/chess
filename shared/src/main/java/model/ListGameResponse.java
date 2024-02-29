@@ -10,4 +10,8 @@ public class ListGameResponse extends BaseResponse{
         super(statuscode);
         this.games = games;
     }
+
+    public Collection<GameData> getGames(){
+        return games;
+    }
 }

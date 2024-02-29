@@ -8,7 +8,7 @@ import java.util.Objects;
 
 //The Service classes implement the actual functionality of the server.
 //More specifically, the Service classes implement the logic associated with the web endpoints.
-public class UserService {
+public class Service {
     static UserDAO my_userDAO = new MemoryUserDAO(); //change upon completion of SQL database
     static AuthDAO my_authDAO = new MemoryAuthDAO();
     static GameDAO my_gameDAO = new MemoryGameDAO();
@@ -87,10 +87,6 @@ public class UserService {
         if ((game.gameName() == null)) {
             return new ErrorResponse(500, "Error: bad request");
         }
-        //checkAuth
-        //getGame(gameName) to make sure not already taken
-        //if null, creategame(gameName)
-        //return create game auth
         if(my_authDAO.checkAuth(authToken)){
             GameData createdgame = my_gameDAO.createGame(game);
             return new CreateGameResponse(200, createdgame.gameID());
@@ -101,13 +97,6 @@ public class UserService {
     }
 
     public static BaseResponse joingame(String playerColor, int gameID, String authToken){
-        //checkAuth
-        //check if desired game exists
-        //if playercolor is WHITE, check if desired game whiteusername() is blank and add it. else save as watcher
-        //if black to opposite
-
-
-        //if my_gameDAO.get_game(gameID)
         GameData desiredgame = my_gameDAO.getGame(gameID);
         if(desiredgame == null){
             return new ErrorResponse(400, "Error: bad request");

@@ -3,11 +3,11 @@ package server;
 import com.google.gson.Gson;
 import model.*;
 import spark.*;
-import service.UserService;
+import service.Service;
 
 public class Server {
 
-    private final UserService registerService = new UserService(); // on Pet service what does this do?
+    private final Service registerService = new Service(); // on Pet service what does this do?
     //private final WebSocketHandler webSocketHandler;
 
     public int run(int desiredPort) { //this one returns an int. Know that pet returns PetServer
@@ -42,7 +42,7 @@ public class Server {
     }
 
     private Object clear(Request req, Response res) {
-        BaseResponse response = UserService.clear();
+        BaseResponse response = Service.clear();
         res.status(response.getStatusCode());
         return new Gson().toJson(response);
     }
@@ -52,35 +52,35 @@ public class Server {
 //        res.status(response.responsecode());
 //        return new Gson().toJson(response);
         UserData user = new Gson().fromJson(req.body(), UserData.class);
-        BaseResponse response = UserService.register(user);
+        BaseResponse response = Service.register(user);
         res.status(response.getStatusCode());
         return new Gson().toJson(response);
     }
 
     private Object login(Request req, Response res){
         UserData user = new Gson().fromJson(req.body(), UserData.class);
-        BaseResponse response = UserService.login(user);
+        BaseResponse response = Service.login(user);
         res.status(response.getStatusCode());
         return new Gson().toJson(response);
     }
 
     private Object logout(Request req, Response res){
         String authToken = req.headers("authorization");
-        BaseResponse response = UserService.logout(authToken);
+        BaseResponse response = Service.logout(authToken);
         res.status(response.getStatusCode());
         return new Gson().toJson(response);
     }
 
     private Object listgames(Request req, Response res){
         String authToken = req.headers("authorization");
-        BaseResponse response = UserService.listgames(authToken);
+        BaseResponse response = Service.listgames(authToken);
         res.status(response.getStatusCode());
         return new Gson().toJson(response);
     }
     private Object creategame(Request req, Response res){
         String authToken = req.headers("authorization");
         GameData game = new Gson().fromJson(req.body(), GameData.class);
-        BaseResponse response = UserService.creategame(game, authToken);
+        BaseResponse response = Service.creategame(game, authToken);
         res.status(response.getStatusCode());
         return new Gson().toJson(response);
     }
@@ -88,7 +88,7 @@ public class Server {
     private Object joingame(Request req, Response res){
         String authToken = req.headers("authorization");
         JoinGameRequest joinrequest = new Gson().fromJson(req.body(), JoinGameRequest.class);
-        BaseResponse response = UserService.joingame(joinrequest.playerColor(), joinrequest.gameID(), authToken);
+        BaseResponse response = Service.joingame(joinrequest.playerColor(), joinrequest.gameID(), authToken);
         res.status(response.getStatusCode());
         return new Gson().toJson(response);
     }
