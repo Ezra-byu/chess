@@ -51,17 +51,17 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        ChessPiece original_piece = game_board.getPiece(startPosition);
+        ChessPiece originalPiece = game_board.getPiece(startPosition);
         if (game_board.getPiece(startPosition) == null){
             return null;
         }
-        potential_moves = original_piece.pieceMoves(game_board, startPosition);
-        for (ChessMove move_element : original_piece.pieceMoves(game_board, startPosition)){
-            tryMove(move_element);
-            if (isInCheck(original_piece.getTeamColor())){ // game_team can be used because makeMoves ensures the right color is making move
-                potential_moves.remove(move_element);
+        potential_moves = originalPiece.pieceMoves(game_board, startPosition);
+        for (ChessMove moveElement : originalPiece.pieceMoves(game_board, startPosition)){
+            tryMove(moveElement);
+            if (isInCheck(originalPiece.getTeamColor())){ // game_team can be used because makeMoves ensures the right color is making move
+                potential_moves.remove(moveElement);
             }
-            undoMove(move_element);
+            undoMove(moveElement);
             //set game_board back to before next tryMove
         }
         return potential_moves;
@@ -96,8 +96,8 @@ public class ChessGame {
         }
         //check if there is a piece in start position
         //check if move is ValidMove() put start postion
-        Collection<ChessMove> local_valid_moves= validMoves(move.getStartPosition());
-        if (!local_valid_moves.contains(move)){
+        Collection<ChessMove> localValidMoves= validMoves(move.getStartPosition());
+        if (!localValidMoves.contains(move)){
             throw new InvalidMoveException();
         }
 
@@ -129,16 +129,16 @@ public class ChessGame {
         Collection<ChessPosition> kingDangerZone = king_danger_zone;
         kingDangerZone.clear();
         if (teamColor == TeamColor.WHITE) {
-            for (ChessPosition pos_element : game_board.getBlackPosition()) {
+            for (ChessPosition posElement : game_board.getBlackPosition()) {
                 //for position in set of positions of white pieces on the board
-                for (ChessMove move_element: game_board.getPiece(pos_element).pieceMoves(game_board, pos_element)){
+                for (ChessMove moveElement: game_board.getPiece(posElement).pieceMoves(game_board, posElement)){
                     //for all the moves of that white piece, add the end position to black king danger zone
-                    kingDangerZone.add(move_element.getEndPosition());
+                    kingDangerZone.add(moveElement.getEndPosition());
                 }
             }
-            ChessPosition king_pos = game_board.getKingPosition(ChessPiece.PieceType.KING, TeamColor.WHITE);
-//            System.out.print("king position:" + king_pos);
-            if (kingDangerZone.contains(king_pos)){
+            ChessPosition kingPos = game_board.getKingPosition(ChessPiece.PieceType.KING, TeamColor.WHITE);
+//            System.out.print("king position:" + kingPos);
+            if (kingDangerZone.contains(kingPos)){
 //                System.out.print("white in check");
                 return true;
             }
