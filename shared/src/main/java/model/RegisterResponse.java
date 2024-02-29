@@ -11,7 +11,9 @@ public class RegisterResponse extends BaseResponse {
         this.username = username;
         this.authToken = authToken;
     }
-
+    public String getAuthToken(){
+        return authToken;
+    }
     public String toString() {
         return new Gson().toJson(this);
     }
