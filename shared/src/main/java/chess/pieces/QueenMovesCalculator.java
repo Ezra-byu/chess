@@ -13,7 +13,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
     private int col;
     private int rowincr;
     private int colincr;
-    private ChessPosition tempposition;
+    private ChessPosition thetempposition;
     Set<ChessMove> moves_Set = new HashSet<ChessMove>();
     public QueenMovesCalculator(ChessPiece piece, ChessBoard board) {
         this.piece = piece;
@@ -40,21 +40,21 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
         row += rowincr;
         col += colincr;
         while((row >= 1) && (row <= 8) && (col >= 1) && (col <= 8)){
-            tempposition = new ChessPosition(row , col); //create the position being investigated
-            if (board.getPiece(tempposition) != null) { //if there is a piece in the position being investigated
-                if (board.getPiece(tempposition).getTeamColor() != piece.getTeamColor()){ //if piece not same team
+            thetempposition = new ChessPosition(row , col); //create the position being investigated
+            if (board.getPiece(thetempposition) != null) { //if there is a piece in the position being investigated
+                if (board.getPiece(thetempposition).getTeamColor() != piece.getTeamColor()){ //if piece not same team
                     //add tempposition to the moves_set
-                    moves_Set.add(new ChessMove(position, tempposition, null));
+                    moves_Set.add(new ChessMove(position, thetempposition, null));
                     break;
                 }
-                else if (board.getPiece(tempposition).getTeamColor() == piece.getTeamColor()){
+                else if (board.getPiece(thetempposition).getTeamColor() == piece.getTeamColor()){
                     break;
                 }
                 else {throw new RuntimeException("Team Color equal method error");}
             }
             else{ // if no piece in the position of interest
                 //add tempposition to the move array
-                moves_Set.add(new ChessMove(position, tempposition, null));
+                moves_Set.add(new ChessMove(position, thetempposition, null));
             }
             row += rowincr;
             col += colincr;
