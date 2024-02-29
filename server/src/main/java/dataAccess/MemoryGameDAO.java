@@ -29,9 +29,11 @@ public class MemoryGameDAO implements GameDAO{
 
     @Override
     public GameData updateGame(GameData game) {
+        int savedID = game.gameID();
         games.remove(game.gameID());
-        createGame(game);
-        return game;
+        GameData newgame = new GameData(savedID, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
+        games.put(newgame.gameID(), newgame);
+        return newgame;
     }
 
     @Override

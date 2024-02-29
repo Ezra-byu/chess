@@ -109,23 +109,28 @@ public class UserService {
 
         //if my_gameDAO.get_game(gameID)
         GameData desiredgame = my_gameDAO.getGame(gameID);
-        String username = my_authDAO.getAuth(authToken).username();
         if(desiredgame == null){
             return new ErrorResponse(400, "Error: bad request");
         }
-        if(my_authDAO.checkAuth(authToken)){
+        if(my_authDAO.checkAuth(authToken) || (my_authDAO.getAuth(authToken) != null)){
+            String username = my_authDAO.getAuth(authToken).username();
            if(Objects.equals(playerColor, "WHITE")){
                if (desiredgame.whiteUsername() == null){
                    my_gameDAO.updateGame(new GameData(desiredgame.gameID(), username, desiredgame.blackUsername(), desiredgame.gameName(), desiredgame.game()));
                }
-               //else add as watcher
+               else{
+                   return new ErrorResponse(403, "Error: already taken");
+               }
            }
            if(Objects.equals(playerColor, "BLACK")){
                if (desiredgame.blackUsername() == null){
                    my_gameDAO.updateGame(new GameData(desiredgame.gameID(), desiredgame.whiteUsername(), username, desiredgame.gameName(), desiredgame.game()));
                }
-               //else add as watcher
+               else{
+                   return new ErrorResponse(403, "Error: already taken");
+               }
            }
+            //else add as watcher
            return new JoinGameResponse(200);
         }
         else{
