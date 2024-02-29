@@ -99,4 +99,6 @@ public class UserService {
             return new ErrorResponse(401, "Error: unauthorized");
         }
     }
+
+    public static BaseResponse joingame()
 }

@@ -17,13 +17,14 @@ public class Server {
 
         // Register your endpoints and handle exceptions here.
 
-        //register
         Spark.post("/user", this::register);
         Spark.delete("/db", this::clear);
         Spark.post("/session", this::login);
         Spark.delete("/session", this::logout);
         Spark.get("/game", this::listgames);
         Spark.post("/game", this::creategame);
+        Spark.put("/game", this::joingame);
+
 
         //catch undirected calls
         //server.createContext("/", new FileHandler());
@@ -82,6 +83,13 @@ public class Server {
         BaseResponse response = UserService.creategame(game, authToken);
         res.status(response.getStatusCode());
         return new Gson().toJson(response);
+    }
+
+    private Object joingame(Request req, Response res){
+        String authToken = req.headers("authorization");
+        JoinGameRequest joinrequest = new Gson().fromJson(req.body(), JoinGameRequest.class);
+        BaseResponse response = UserService.joingame(game, authToken);
+
     }
 }
 
