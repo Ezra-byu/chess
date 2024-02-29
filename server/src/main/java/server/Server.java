@@ -30,8 +30,6 @@ public class Server {
         //catch undirected calls
         //server.createContext("/", new FileHandler());
 
-
-
         Spark.awaitInitialization();
         return Spark.port();
     }
@@ -48,10 +46,6 @@ public class Server {
         return new Gson().toJson(response);
     }
     private Object register(Request req, Response res) {
-//        UserData user = new Gson().fromJson(req.body(), UserData.class); //UserData (a data model class) or just User?
-//        RegisterResponse response = UserService.register(user);
-//        res.status(response.responsecode());
-//        return new Gson().toJson(response);
         UserData user = new Gson().fromJson(req.body(), UserData.class);
         BaseResponse response = Service.register(user);
         res.status(response.getStatusCode());
