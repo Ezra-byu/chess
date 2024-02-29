@@ -82,4 +82,21 @@ public class UserService {
             return new ErrorResponse(401, "Error: unauthorized");
         }
     }
+
+    public static BaseResponse creategame(GameData game, String authToken) {
+        if ((game.gameName() == null)) {
+            return new ErrorResponse(500, "Error: bad request");
+        }
+        //checkAuth
+        //getGame(gameName) to make sure not already taken
+        //if null, creategame(gameName)
+        //return create game auth
+        if(my_authDAO.checkAuth(authToken)){
+            GameData createdgame = my_gameDAO.createGame(game);
+            return new CreateGameResponse(200, createdgame.gameID());
+        }
+        else {
+            return new ErrorResponse(401, "Error: unauthorized");
+        }
+    }
 }

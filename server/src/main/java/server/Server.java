@@ -1,11 +1,8 @@
 package server;
 
 import com.google.gson.Gson;
-import model.AuthData;
-import model.BaseResponse;
-import model.RegisterResponse;
+import model.*;
 import spark.*;
-import model.UserData;
 import service.UserService;
 
 public class Server {
@@ -26,6 +23,7 @@ public class Server {
         Spark.post("/session", this::login);
         Spark.delete("/session", this::logout);
         Spark.get("/game", this::listgames);
+        Spark.post("/game", this::creategame);
 
         //catch undirected calls
         //server.createContext("/", new FileHandler());
@@ -75,6 +73,13 @@ public class Server {
     private Object listgames(Request req, Response res){
         String authToken = req.headers("authorization");
         BaseResponse response = UserService.listgames(authToken);
+        res.status(response.getStatusCode());
+        return new Gson().toJson(response);
+    }
+    private Object creategame(Request req, Response res){
+        String authToken = req.headers("authorization");
+        GameData game = new Gson().fromJson(req.body(), GameData.class);
+        BaseResponse response = UserService.creategame(game, authToken);
         res.status(response.getStatusCode());
         return new Gson().toJson(response);
     }

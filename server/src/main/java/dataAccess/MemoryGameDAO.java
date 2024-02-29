@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 public class MemoryGameDAO implements GameDAO{
-    final private HashMap<Integer, GameData> games = new HashMap<>();
+    final private HashMap<Integer, GameData> games = new HashMap<>();//{gameID, GameData}
     @Override
     public GameData createGame(GameData game) {
         games.put(game.gameID(), game);
