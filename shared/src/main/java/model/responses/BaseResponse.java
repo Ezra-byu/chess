@@ -1,4 +1,4 @@
-package model;
+package model.responses;
 
 public abstract class BaseResponse {
     int statusCode;

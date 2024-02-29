@@ -1,6 +1,7 @@
-package model;
+package model.responses;
 
 import com.google.gson.Gson;
+import model.responses.BaseResponse;
 
 public class RegisterResponse extends BaseResponse {
     String username;

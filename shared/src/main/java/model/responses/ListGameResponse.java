@@ -1,8 +1,11 @@
-package model;
+package model.responses;
+
+import model.GameData;
+import model.responses.BaseResponse;
 
 import java.util.Collection;
 
-public class ListGameResponse extends BaseResponse{
+public class ListGameResponse extends BaseResponse {
 
     Collection <GameData> games;
 

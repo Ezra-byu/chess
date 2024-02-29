@@ -2,6 +2,7 @@ package serviceTests;
 
 import exception.ResponseException;
 import model.*;
+import model.responses.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.Service;

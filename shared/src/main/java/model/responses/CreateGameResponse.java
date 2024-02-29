@@ -1,6 +1,8 @@
-package model;
+package model.responses;
 
-public class CreateGameResponse extends BaseResponse{
+import model.responses.BaseResponse;
+
+public class CreateGameResponse extends BaseResponse {
     int gameID;
     public CreateGameResponse(int statuscode, int gameID) {
         super(statuscode);

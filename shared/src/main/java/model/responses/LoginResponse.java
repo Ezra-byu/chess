@@ -1,6 +1,8 @@
-package model;
+package model.responses;
 
-public class LoginResponse extends BaseResponse{
+import model.responses.BaseResponse;
+
+public class LoginResponse extends BaseResponse {
     //"authToken": "example_auth",
     //"username": "example_username"
     String username;

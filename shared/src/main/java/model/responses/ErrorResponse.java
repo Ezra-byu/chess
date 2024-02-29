@@ -1,7 +1,9 @@
-package model;
+package model.responses;
 
 
-public class ErrorResponse extends BaseResponse{
+import model.responses.BaseResponse;
+
+public class ErrorResponse extends BaseResponse {
     String message;
 
 
