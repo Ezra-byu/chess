@@ -18,55 +18,55 @@ public class KingMovesCalculator implements PieceMovesCalculator {
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
         proposedposition = new ChessPosition(position.getRow(), position.getColumn()+1);
-        if (isInBounds(proposedposition) && !isBlocked(proposedposition)) {
+        if (isInBoundsKing(proposedposition) && !isBlocked(proposedposition)) {
             movesSet.add(new ChessMove(position, proposedposition, null));
         }
 
         proposedposition = new ChessPosition(position.getRow()+1 , position.getColumn());
-        if (isInBounds(proposedposition) && !isBlocked(proposedposition)) {
+        if (isInBoundsKing(proposedposition) && !isBlocked(proposedposition)) {
             movesSet.add(new ChessMove(position, proposedposition, null));
         }
 
         proposedposition = new ChessPosition(position.getRow()+1 , position.getColumn()+1);
-        if (isInBounds(proposedposition) && !isBlocked(proposedposition)) {
+        if (isInBoundsKing(proposedposition) && !isBlocked(proposedposition)) {
             movesSet.add(new ChessMove(position, proposedposition, null));
         }
 
         proposedposition = new ChessPosition(position.getRow() , position.getColumn()-1);
-        if (isInBounds(proposedposition) && !isBlocked(proposedposition)) {
+        if (isInBoundsKing(proposedposition) && !isBlocked(proposedposition)) {
             movesSet.add(new ChessMove(position, proposedposition, null));
         }
 
         proposedposition = new ChessPosition(position.getRow()-1 , position.getColumn());
-        if (isInBounds(proposedposition) && !isBlocked(proposedposition)) {
+        if (isInBoundsKing(proposedposition) && !isBlocked(proposedposition)) {
             movesSet.add(new ChessMove(position, proposedposition, null));
         }
 
         proposedposition = new ChessPosition(position.getRow()-1 , position.getColumn()-1);
-        if (isInBounds(proposedposition) && !isBlocked(proposedposition)) {
+        if (isInBoundsKing(proposedposition) && !isBlocked(proposedposition)) {
             movesSet.add(new ChessMove(position, proposedposition, null));
         }
         proposedposition = new ChessPosition(position.getRow()-1 , position.getColumn()+1);
-        if (isInBounds(proposedposition) && !isBlocked(proposedposition)) {
+        if (isInBoundsKing(proposedposition) && !isBlocked(proposedposition)) {
             movesSet.add(new ChessMove(position, proposedposition, null));
         }
         proposedposition = new ChessPosition(position.getRow()+1 , position.getColumn()-1);
-        if (isInBounds(proposedposition) && !isBlocked(proposedposition)) {
+        if (isInBoundsKing(proposedposition) && !isBlocked(proposedposition)) {
             movesSet.add(new ChessMove(position, proposedposition, null));
         }
         return movesSet;
     }
-    private Boolean isInBounds(ChessPosition position){
-        if ((position.getRow() >= 1) && (position.getRow() <= 8) && (position.getColumn() >= 1) && (position.getColumn() <= 8)){
+    private Boolean isInBoundsKing(ChessPosition kingPosition){
+        if ((kingPosition.getRow() >= 1) && (kingPosition.getRow() <= 8) && (kingPosition.getColumn() >= 1) && (kingPosition.getColumn() <= 8)){
             return Boolean.TRUE;
         }
         else {return Boolean.FALSE; }
     }
-    private Boolean isBlocked(ChessPosition position){
-        if ((board.getPiece(position) == null)){
+    private Boolean isBlocked(ChessPosition kingPosition){
+        if ((board.getPiece(kingPosition) == null)){
             return Boolean.FALSE;
         }
-        else if (board.getPiece(position).getTeamColor() != piece.getTeamColor()) {
+        else if (board.getPiece(kingPosition).getTeamColor() != piece.getTeamColor()) {
             return Boolean.FALSE;
         }
         else {return Boolean.TRUE; }

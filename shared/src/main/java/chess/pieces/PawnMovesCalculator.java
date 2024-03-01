@@ -121,15 +121,15 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
         return movesSet;
     }
 
-    private Boolean isInBounds(ChessPosition position){
-        if ((position.getRow() >= 1) && (position.getRow() <= 8) && (position.getColumn() >= 1) && (position.getColumn() <= 8)){
+    private Boolean isInBounds(ChessPosition positionToCheck){
+        if ((positionToCheck.getRow() >= 1) && (positionToCheck.getRow() <= 8) && (positionToCheck.getColumn() >= 1) && (positionToCheck.getColumn() <= 8)){
             return Boolean.TRUE;
         }
         else {return Boolean.FALSE; }
     }
 
-    private Boolean isBlocked(ChessPosition position){
-        if (board.getPiece(position) != null){
+    private Boolean isBlocked(ChessPosition pawnPosition){
+        if (board.getPiece(pawnPosition) != null){
             return Boolean.TRUE;
         }
         else {return Boolean.FALSE; }
