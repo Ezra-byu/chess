@@ -12,7 +12,7 @@ public class RookMovesCalculator implements PieceMovesCalculator {
     private int row;
     private int col;
     private ChessPosition tempposition;
-    Set<ChessMove> moves_Set = new HashSet<ChessMove>();
+    Set<ChessMove> movesSet = new HashSet<ChessMove>();
     public RookMovesCalculator(ChessPiece piece, ChessBoard board) {
         this.piece = piece;
         this.board = board;
@@ -24,9 +24,7 @@ public class RookMovesCalculator implements PieceMovesCalculator {
         orthogonalChecker(0, -1, board, position);
         orthogonalChecker(1, 0, board, position);
         orthogonalChecker(-1, 0, board, position);
-        //System.out.println("out of loop");
-        //moves_Set.add(new ChessMove(new ChessPosition(1 , 1), new ChessPosition(1 , 1), null));
-        return moves_Set;
+        return movesSet;
     }
     private void orthogonalChecker(int rowincr, int colincr, ChessBoard board, ChessPosition position) {
 //        System.out.println("in loop");
@@ -39,8 +37,8 @@ public class RookMovesCalculator implements PieceMovesCalculator {
             tempposition = new ChessPosition(row , col); //create the position being investigated
             if (board.getPiece(tempposition) != null) { //if there is a piece in the position being investigated
                 if (board.getPiece(tempposition).getTeamColor() != piece.getTeamColor()){ //if piece not same team
-                    //add tempposition to the moves_set
-                    moves_Set.add(new ChessMove(position, tempposition, null));
+                    //add tempposition to the movesSet
+                    movesSet.add(new ChessMove(position, tempposition, null));
                     break;
                 }
                 else if (board.getPiece(tempposition).getTeamColor() == piece.getTeamColor()){
@@ -50,7 +48,7 @@ public class RookMovesCalculator implements PieceMovesCalculator {
             }
             else{ // if no piece in the position of interest
                 //add tempposition to the move array
-                moves_Set.add(new ChessMove(position, tempposition, null));
+                movesSet.add(new ChessMove(position, tempposition, null));
             }
             row += rowincr; //increment row
             col += colincr; //incrament col

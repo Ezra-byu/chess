@@ -14,7 +14,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
     private int rowincr;
     private int colincr;
     private ChessPosition thetempposition;
-    Set<ChessMove> moves_Set = new HashSet<ChessMove>();
+    Set<ChessMove> movesSet = new HashSet<ChessMove>();
     public QueenMovesCalculator(ChessPiece piece, ChessBoard board) {
         this.piece = piece;
         this.board = board;
@@ -31,7 +31,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
         diagonalChecker(1, 0, board, position);
         diagonalChecker(-1, 0, board, position);
 
-        return moves_Set;
+        return movesSet;
     }
     private void diagonalChecker(int rowincr, int colincr, ChessBoard board, ChessPosition position) {
 //        System.out.println("in loop");
@@ -44,7 +44,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
             if (board.getPiece(thetempposition) != null) { //if there is a piece in the position being investigated
                 if (board.getPiece(thetempposition).getTeamColor() != piece.getTeamColor()){ //if piece not same team
                     //add tempposition to the moves_set
-                    moves_Set.add(new ChessMove(position, thetempposition, null));
+                    movesSet.add(new ChessMove(position, thetempposition, null));
                     break;
                 }
                 else if (board.getPiece(thetempposition).getTeamColor() == piece.getTeamColor()){
@@ -54,7 +54,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
             }
             else{ // if no piece in the position of interest
                 //add tempposition to the move array
-                moves_Set.add(new ChessMove(position, thetempposition, null));
+                movesSet.add(new ChessMove(position, thetempposition, null));
             }
             row += rowincr;
             col += colincr;

@@ -10,14 +10,14 @@ import java.util.Objects;
 //The Service classes implement the actual functionality of the server.
 //More specifically, the Service classes implement the logic associated with the web endpoints.
 public class Service {
-    static UserDAO my_userDAO = new MemoryUserDAO(); //change upon completion of SQL database
-    static AuthDAO my_authDAO = new MemoryAuthDAO();
-    static GameDAO my_gameDAO = new MemoryGameDAO();
+    static UserDAO myUserDAO = new MemoryUserDAO(); //change upon completion of SQL database
+    static AuthDAO myAuthDAO = new MemoryAuthDAO();
+    static GameDAO myGameDAO = new MemoryGameDAO();
 
     public static BaseResponse clear(){
-        my_userDAO.clearUser();
-        my_authDAO.clearAuth();
-        my_gameDAO.clearGame();
+        myUserDAO.clearUser();
+        myAuthDAO.clearAuth();
+        myGameDAO.clearGame();
         return new ClearResponse(200);
     }
 
@@ -29,10 +29,10 @@ public class Service {
         //if getUser returns null run createUser. else return fail [403]
         //run createAuth
         //return the AuthData from ^
-        UserData returneduser = my_userDAO.getUser(user);
+        UserData returneduser = myUserDAO.getUser(user);
         if (returneduser == null) {
-            UserData createduser = my_userDAO.createUser(user);
-            AuthData createdauth = my_authDAO.createAuth(user);
+            UserData createduser = myUserDAO.createUser(user);
+            AuthData createdauth = myAuthDAO.createAuth(user);
             return new RegisterResponse(200, createduser.username(), createdauth.authToken());
         } else {//handle exception and return error code
             return new ErrorResponse(403, "Error: already taken");
@@ -47,9 +47,9 @@ public class Service {
         //if no user or wrong password, return 401 unauthorized
         //createAuth
         //return the AuthData from ^
-        UserData returneduser = my_userDAO.getUser(user);
+        UserData returneduser = myUserDAO.getUser(user);
         if ((returneduser != null) && (Objects.equals(returneduser.password(), user.password()))) {
-            AuthData createdauth = my_authDAO.createAuth(user);
+            AuthData createdauth = myAuthDAO.createAuth(user);
             return new LoginResponse(200, user.username(), createdauth.authToken());
         }
         else {
@@ -61,8 +61,8 @@ public class Service {
         //if checkAuth auth
         //deleteAuth with that auth token
         //return logoutResponse
-        if(my_authDAO.checkAuth(authToken)){
-            my_authDAO.deleteAuth(my_authDAO.getAuth(authToken));
+        if(myAuthDAO.checkAuth(authToken)){
+            myAuthDAO.deleteAuth(myAuthDAO.getAuth(authToken));
             return new LogoutResponse(200);
         }
         else{
@@ -74,14 +74,14 @@ public class Service {
         //checkAuth
         //listGames()
         //return ListGame response()
-        if(my_authDAO.checkAuth(authToken)){
-            Collection<GameData> my_games = my_gameDAO.listGames();
+        if(myAuthDAO.checkAuth(authToken)){
+            Collection<GameData> myGames = myGameDAO.listGames();
 
             //for the Style Grader
-            ListGameResponse bogusResponse = new ListGameResponse(200, my_games);
+            ListGameResponse bogusResponse = new ListGameResponse(200, myGames);
             bogusResponse.getGames();
 
-            return new ListGameResponse(200, my_games);
+            return new ListGameResponse(200, myGames);
         }
         else{
             return new ErrorResponse(401, "Error: unauthorized");
@@ -92,8 +92,8 @@ public class Service {
         if ((game.gameName() == null)) {
             return new ErrorResponse(500, "Error: bad request");
         }
-        if(my_authDAO.checkAuth(authToken)){
-            GameData createdgame = my_gameDAO.createGame(game);
+        if(myAuthDAO.checkAuth(authToken)){
+            GameData createdgame = myGameDAO.createGame(game);
             return new CreateGameResponse(200, createdgame.gameID());
         }
         else {
@@ -102,15 +102,15 @@ public class Service {
     }
 
     public static BaseResponse joingame(String playerColor, int gameID, String authToken){
-        GameData desiredgame = my_gameDAO.getGame(gameID);
+        GameData desiredgame = myGameDAO.getGame(gameID);
         if(desiredgame == null){
             return new ErrorResponse(400, "Error: bad request");
         }
-        if(my_authDAO.checkAuth(authToken) || (my_authDAO.getAuth(authToken) != null)){
-            String username = my_authDAO.getAuth(authToken).username();
+        if(myAuthDAO.checkAuth(authToken) || (myAuthDAO.getAuth(authToken) != null)){
+            String username = myAuthDAO.getAuth(authToken).username();
            if(Objects.equals(playerColor, "WHITE")){
                if (desiredgame.whiteUsername() == null){
-                   my_gameDAO.updateGame(new GameData(desiredgame.gameID(), username, desiredgame.blackUsername(), desiredgame.gameName(), desiredgame.game()));
+                   myGameDAO.updateGame(new GameData(desiredgame.gameID(), username, desiredgame.blackUsername(), desiredgame.gameName(), desiredgame.game()));
                }
                else{
                    return new ErrorResponse(403, "Error: already taken");
@@ -118,7 +118,7 @@ public class Service {
            }
            if(Objects.equals(playerColor, "BLACK")){
                if (desiredgame.blackUsername() == null){
-                   my_gameDAO.updateGame(new GameData(desiredgame.gameID(), desiredgame.whiteUsername(), username, desiredgame.gameName(), desiredgame.game()));
+                   myGameDAO.updateGame(new GameData(desiredgame.gameID(), desiredgame.whiteUsername(), username, desiredgame.gameName(), desiredgame.game()));
                }
                else{
                    return new ErrorResponse(403, "Error: already taken");

@@ -10,7 +10,7 @@ public class KnightMovesCalculator implements PieceMovesCalculator {
     private ChessPiece piece;
     private ChessBoard board;
     private ChessPosition proposedposition;
-    Set<ChessMove> moves_Set = new HashSet<ChessMove>();
+    Set<ChessMove> movesSet = new HashSet<ChessMove>();
     public KnightMovesCalculator(ChessPiece piece, ChessBoard board) {
         this.piece = piece;
         this.board = board;
@@ -20,42 +20,42 @@ public class KnightMovesCalculator implements PieceMovesCalculator {
         //upper left
         proposedposition = new ChessPosition(position.getRow()+2 , position.getColumn()-1);
         if (isInBounds(proposedposition) && !isBlocked(proposedposition)) {
-            moves_Set.add(new ChessMove(position, proposedposition, null));
+            movesSet.add(new ChessMove(position, proposedposition, null));
         }
         proposedposition = new ChessPosition(position.getRow()+1 , position.getColumn()-2);
         if (isInBounds(proposedposition) && !isBlocked(proposedposition)) {
-            moves_Set.add(new ChessMove(position, proposedposition, null));
+            movesSet.add(new ChessMove(position, proposedposition, null));
         }
         //upper right
         proposedposition = new ChessPosition(position.getRow()+2 , position.getColumn()+1);
         if (isInBounds(proposedposition) && !isBlocked(proposedposition)) {
-            moves_Set.add(new ChessMove(position, proposedposition, null));
+            movesSet.add(new ChessMove(position, proposedposition, null));
         }
         proposedposition = new ChessPosition(position.getRow()+1 , position.getColumn()+2);
         if (isInBounds(proposedposition) && !isBlocked(proposedposition)) {
-            moves_Set.add(new ChessMove(position, proposedposition, null));
+            movesSet.add(new ChessMove(position, proposedposition, null));
         }
         //lower right
         proposedposition = new ChessPosition(position.getRow()-2 , position.getColumn()+1);
         if (isInBounds(proposedposition) && !isBlocked(proposedposition)) {
-            moves_Set.add(new ChessMove(position, proposedposition, null));
+            movesSet.add(new ChessMove(position, proposedposition, null));
         }
         proposedposition = new ChessPosition(position.getRow()-1 , position.getColumn()+2);
         if (isInBounds(proposedposition) && !isBlocked(proposedposition)) {
-            moves_Set.add(new ChessMove(position, proposedposition, null));
+            movesSet.add(new ChessMove(position, proposedposition, null));
         }
         //lower left
         proposedposition = new ChessPosition(position.getRow()-2 , position.getColumn()-1);
         if (isInBounds(proposedposition) && !isBlocked(proposedposition)) {
-            moves_Set.add(new ChessMove(position, proposedposition, null));
+            movesSet.add(new ChessMove(position, proposedposition, null));
         }
         proposedposition = new ChessPosition(position.getRow()-1 , position.getColumn()-2);
         if (isInBounds(proposedposition) && !isBlocked(proposedposition)) {
-            moves_Set.add(new ChessMove(position, proposedposition, null));
+            movesSet.add(new ChessMove(position, proposedposition, null));
         }
 
 
-        return moves_Set;
+        return movesSet;
     }
 
     private Boolean isInBounds(ChessPosition position){

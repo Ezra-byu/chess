@@ -12,7 +12,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
     private int row;
     private int col;
     private ChessPosition proposedposition;
-    Set<ChessMove> moves_Set = new HashSet<ChessMove>();
+    Set<ChessMove> movesSet = new HashSet<ChessMove>();
 
     public PawnMovesCalculator(ChessPiece piece, ChessBoard board) {
         this.piece = piece;
@@ -27,31 +27,31 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
             proposedposition = new ChessPosition(position.getRow()+1 , position.getColumn());
             if (isInBounds(proposedposition) && !isBlocked(proposedposition)){ //if it can move forward
                 if (whitePromotion(proposedposition)) { //single move promotion
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.QUEEN));
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.BISHOP));
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.ROOK));
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.KNIGHT));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.QUEEN));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.BISHOP));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.ROOK));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.KNIGHT));
                 }
                 else{ //single move no promotion white
-                    moves_Set.add(new ChessMove(position, proposedposition, null));
+                    movesSet.add(new ChessMove(position, proposedposition, null));
                 }
 
                 // check for the double move white
                 proposedposition = new ChessPosition(position.getRow()+2 , position.getColumn());
                 if (isInBounds(proposedposition) && !isBlocked(proposedposition) && whiteDoubleStart(position)){
-                    moves_Set.add(new ChessMove(position, proposedposition, null));
+                    movesSet.add(new ChessMove(position, proposedposition, null));
                 }
             }
             //try right diagonal
             proposedposition = new ChessPosition(position.getRow()+1 , position.getColumn()+1);
             if (isInBounds(proposedposition) && !diagIsBlocked(proposedposition)) {
                 if (whitePromotion(proposedposition)) { //single move promotion
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.QUEEN));
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.BISHOP));
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.ROOK));
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.KNIGHT));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.QUEEN));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.BISHOP));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.ROOK));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.KNIGHT));
                 } else { //right diag move no promotion white
-                    moves_Set.add(new ChessMove(position, proposedposition, null));
+                    movesSet.add(new ChessMove(position, proposedposition, null));
                 }
             }
 
@@ -59,12 +59,12 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
             proposedposition = new ChessPosition(position.getRow()+1 , position.getColumn()-1);
             if (isInBounds(proposedposition) && !diagIsBlocked(proposedposition)) {
                 if (whitePromotion(proposedposition)) { //single move promotion
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.QUEEN));
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.BISHOP));
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.ROOK));
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.KNIGHT));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.QUEEN));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.BISHOP));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.ROOK));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.KNIGHT));
                 } else { //left diag move no promotion white
-                    moves_Set.add(new ChessMove(position, proposedposition, null));
+                    movesSet.add(new ChessMove(position, proposedposition, null));
                 }
             }
         }
@@ -73,18 +73,18 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
             proposedposition = new ChessPosition(position.getRow()-1 , position.getColumn());
             if (isInBounds(proposedposition) && !isBlocked(proposedposition)){//if it can move forward
                 if (blackPromotion(proposedposition)) { //single move promotion
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.QUEEN));
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.BISHOP));
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.ROOK));
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.KNIGHT));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.QUEEN));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.BISHOP));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.ROOK));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.KNIGHT));
                 }
                 else{ //single move no promotion
-                    moves_Set.add(new ChessMove(position, proposedposition, null));
+                    movesSet.add(new ChessMove(position, proposedposition, null));
                 }
                 // check for the double move
                 proposedposition = new ChessPosition(position.getRow()-2 , position.getColumn());
                 if (isInBounds(proposedposition) && !isBlocked(proposedposition) && blackDoubleStart(position)){
-                    moves_Set.add(new ChessMove(position, proposedposition, null));
+                    movesSet.add(new ChessMove(position, proposedposition, null));
                 }
             }
 
@@ -92,13 +92,13 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
             proposedposition = new ChessPosition(position.getRow()-1 , position.getColumn()+1);
             if (isInBounds(proposedposition) && !diagIsBlocked(proposedposition)) {
                 if (blackPromotion(proposedposition)) { //single move promotion
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.QUEEN));
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.BISHOP));
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.ROOK));
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.KNIGHT));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.QUEEN));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.BISHOP));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.ROOK));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.KNIGHT));
                 }
                 else { //right diag move no promotion black
-                    moves_Set.add(new ChessMove(position, proposedposition, null));
+                    movesSet.add(new ChessMove(position, proposedposition, null));
                 }
             }
 
@@ -107,18 +107,18 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
             //System.out.print(diagIsBlocked(proposedposition));
             if (isInBounds(proposedposition) && !diagIsBlocked(proposedposition)) {
                 if (blackPromotion(proposedposition)) {
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.QUEEN));
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.BISHOP));
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.ROOK));
-                    moves_Set.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.KNIGHT));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.QUEEN));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.BISHOP));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.ROOK));
+                    movesSet.add(new ChessMove(position, proposedposition, ChessPiece.PieceType.KNIGHT));
                 }
                 else { //left diag move no promotion black
-                    moves_Set.add(new ChessMove(position, proposedposition, null));
+                    movesSet.add(new ChessMove(position, proposedposition, null));
                 }
             }
 
         }
-        return moves_Set;
+        return movesSet;
     }
 
     private Boolean isInBounds(ChessPosition position){
