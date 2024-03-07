@@ -1,5 +1,6 @@
 package dataAccess;
 
+import exception.ResponseException;
 import model.GameData;
 
 import java.util.Collection;
@@ -12,7 +13,7 @@ public interface GameDAO {
     // This is used when players join a game or when a move is made.
     GameData createGame(GameData game);
     GameData getGame(int gameID);
-    Collection<GameData> listGames();
+    Collection<GameData> listGames() throws ResponseException;
     GameData updateGame(GameData game);
     void clearGame();
 
