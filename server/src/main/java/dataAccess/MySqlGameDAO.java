@@ -26,11 +26,17 @@ public class MySqlGameDAO implements GameDAO {
         //serializeGame(game)
         //Insert serialized game
         //insert into user values ("abe", "lincoln", "abe@link")
-        var statement = "INSERT INTO game (GameID, whiteUsername, blackUsername, gameName, chess) VALUES (?, ?, ?, ?, ?)";
-        var jsonGame = serializeGame(game.game());
-        var GameID = nextId++;
-        executeUpdate(statement, game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), jsonGame);
-        return new GameData(GameID, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
+        try {
+            var statement = "INSERT INTO game (GameID, whiteUsername, blackUsername, gameName, chess) VALUES (?, ?, ?, ?, ?)";
+            var jsonGame = serializeGame(game.game());
+            var GameID = nextId++;
+            executeUpdate(statement, game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), jsonGame);
+            return new GameData(GameID, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
+        }
+        catch (DataAccessException e){
+            System.out.println("Something went wrong.");
+        }
+        return null;
     }
 
     @Override
@@ -52,10 +58,10 @@ public class MySqlGameDAO implements GameDAO {
     }
 
     @Override
-    public Collection<GameData> listGames() throws ResponseException {
+    public Collection<GameData> listGames() {
         var result = new ArrayList<GameData>();
         try (var conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT id, json FROM pet";
+            var statement = "SELECT id, json FROM game";
             try (var ps = conn.prepareStatement(statement)) {
                 try (var rs = ps.executeQuery()) {
                     while (rs.next()) {
@@ -64,7 +70,8 @@ public class MySqlGameDAO implements GameDAO {
                 }
             }
         } catch (Exception e) {
-            throw new ResponseException(500, String.format("Unable to read data: %s", e.getMessage()));
+            //throw new ResponseException(500, String.format("Unable to read data: %s", e.getMessage()));
+            System.out.println("Something went wrong." + e);
         }
         return result;
     }

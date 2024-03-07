@@ -13,7 +13,7 @@ public interface GameDAO {
     // This is used when players join a game or when a move is made.
     GameData createGame(GameData game);
     GameData getGame(int gameID);
-    Collection<GameData> listGames() throws ResponseException;
+    Collection<GameData> listGames();
     GameData updateGame(GameData game);
     void clearGame();
 

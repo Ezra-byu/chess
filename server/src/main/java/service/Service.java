@@ -10,7 +10,8 @@ import java.util.Objects;
 //The Service classes implement the actual functionality of the server.
 //More specifically, the Service classes implement the logic associated with the web endpoints.
 public class Service {
-    static UserDAO myUserDAO = new MemoryUserDAO(); //change upon completion of SQL database
+//    static UserDAO myUserDAO = new MemoryUserDAO(); //change upon completion of SQL database
+    static UserDAO myUserDAO = new MySqlUserDAO();
     static AuthDAO myAuthDAO = new MemoryAuthDAO();
     static GameDAO myGameDAO = new MemoryGameDAO();
 
@@ -28,7 +29,7 @@ public class Service {
         UserData returneduser = myUserDAO.getUser(user);
         if (returneduser == null) {
             UserData createduser = myUserDAO.createUser(user);
-            AuthData createdauth = myAuthDAO.createAuth(user);
+            AuthData createdauth = myAuthDAO.createAuth(user);//creatauth for createduser (hashed password)?
 
             //for the Style Grader
             RegisterResponse bogusResponse = new RegisterResponse(200, createduser.username(), createdauth.authToken());
