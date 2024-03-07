@@ -5,6 +5,7 @@ import model.AuthData;
 import model.UserData;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class MemoryUserDAO implements UserDAO{
     final private HashMap<String, UserData> users = new HashMap<>();
@@ -25,6 +26,11 @@ public class MemoryUserDAO implements UserDAO{
     @Override
     public void clearUser() {
         users.clear();
+    }
+
+    @Override
+    public boolean passwordMatch(String password, String password1) { //untested
+        return Objects.equals(password, password1);
     }
 
 }

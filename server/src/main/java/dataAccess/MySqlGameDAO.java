@@ -14,8 +14,10 @@ import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
 public class MySqlGameDAO implements GameDAO {
+    private int nextId = 1;
     //add constructor to call createstatements
     //chess database initializer
+
 
     @Override
     public GameData createGame(GameData game) {
@@ -26,12 +28,13 @@ public class MySqlGameDAO implements GameDAO {
         //insert into user values ("abe", "lincoln", "abe@link")
         var statement = "INSERT INTO game (GameID, whiteUsername, blackUsername, gameName, chess) VALUES (?, ?, ?, ?, ?)";
         var jsonGame = serializeGame(game.game());
-        var GameID = executeUpdate(statement, game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), jsonGame);
+        var GameID = nextId++;
+        executeUpdate(statement, game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), jsonGame);
         return new GameData(GameID, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
     }
 
     @Override
-    public GameData getGame(int gameID) throws ResponseException { //my interface does not throw a response exception
+    public GameData getGame(int gameID) { //my interface does not throw a response exception
         try (var conn = DatabaseManager.getConnection()) {
             var statement = "SELECT GameID, whiteUsername, blackUsername, gameName, chess FROM game WHERE gameID=?";
             try (var ps = conn.prepareStatement(statement)) {
@@ -43,7 +46,7 @@ public class MySqlGameDAO implements GameDAO {
                 }
             }
         } catch (Exception e) {
-            throw new ResponseException(500, String.format("Unable to read data: %s", e.getMessage()));
+            //throw new ResponseException(500, String.format("Unable to read data: %s", e.getMessage()));
         }
         return null;
     }

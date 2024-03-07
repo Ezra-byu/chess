@@ -45,7 +45,7 @@ public class Service {
             return new ErrorResponse(500, "Error: bad request");
         }
         UserData returneduser = myUserDAO.getUser(user);
-        if ((returneduser != null) && (Objects.equals(returneduser.password(), user.password()))) {
+        if ((returneduser != null) && (myUserDAO.passwordMatch(returneduser.password(), user.password()))) {
             AuthData createdauth = myAuthDAO.createAuth(user);
             return new LoginResponse(200, user.username(), createdauth.authToken());
         }
