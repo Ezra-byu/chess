@@ -12,7 +12,9 @@ import java.util.Objects;
 public class Service {
 //    static UserDAO myUserDAO = new MemoryUserDAO(); //change upon completion of SQL database
     static UserDAO myUserDAO = new MySqlUserDAO();
-    static AuthDAO myAuthDAO = new MemoryAuthDAO();
+
+//    static AuthDAO myAuthDAO = new MemoryAuthDAO();
+    static AuthDAO myAuthDAO = new MySqlAuthDAO();
     static GameDAO myGameDAO = new MemoryGameDAO();
 
     public static BaseResponse clear(){
