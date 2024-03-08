@@ -60,14 +60,20 @@ public class MySqlUserDAO implements UserDAO{
 
     @Override
     public void clearUser() {
-
+        try {
+            var statement = "TRUNCATE user";
+            executeUpdate(statement);
+        }
+        catch (DataAccessException e){
+            System.out.println("Something went wrong." + e);
+        }
     }
 
     @Override
     public boolean passwordMatch(String password, String password1) {
         //var hashedPassword = readHashedPasswordFromDatabase(username);
-        var hashedPassword = password1;
-        var providedClearTextPassword = password;
+        var hashedPassword = password;
+        var providedClearTextPassword = password1;
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         return encoder.matches(providedClearTextPassword, hashedPassword);

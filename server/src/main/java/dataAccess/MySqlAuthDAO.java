@@ -21,7 +21,13 @@ public class MySqlAuthDAO implements AuthDAO{
 
     @Override
     public void clearAuth() {
-
+        try {
+            var statement = "TRUNCATE auth";
+            executeUpdate(statement);
+        }
+        catch (DataAccessException e){
+            System.out.println("Something went wrong." + e);
+        }
     }
 
     @Override
@@ -32,13 +38,9 @@ public class MySqlAuthDAO implements AuthDAO{
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS  auth (
-              `id` int NOT NULL AUTO_INCREMENT,
-              `name` varchar(256) NOT NULL,
-              `type` ENUM('CAT', 'DOG', 'FISH', 'FROG', 'ROCK') DEFAULT 'CAT',
-              `json` TEXT DEFAULT NULL,
-              PRIMARY KEY (`id`),
-              INDEX(type),
-              INDEX(name)
+              `authToken` varchar(256) NOT NULL,
+              `username` varchar(256) NOT NULL,
+              PRIMARY KEY (`authToken`),
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """
     };
