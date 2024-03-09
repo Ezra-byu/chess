@@ -87,14 +87,29 @@ public class MySqlGameDAO implements GameDAO{
 
     @Override
     public GameData updateGame(GameData game) {
-        try {
-            //var statement = "INSERT INTO user (username, password, email) VALUES (?, ?, ?)";
-            //update user set password = 'lololololol', email = 'sharknados' where username = 'usernjhgfame' ;
-            // UPDATE table SET whiteUsername=? WHERE GameID =?"
-            var statement = "UPDATE game SET (whiteUsername, blackUsername, gameName, chess) WHERE GameID =?";
-            executeUpdate(statement, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game(), game.gameID());
-        }
-        catch (DataAccessException e){
+        try (var conn = DatabaseManager.getConnection()) {
+            var statement = "UPDATE game SET whiteUsername=?, blackUsername=?, chess=? WHERE GameID =?";
+            var jsonGame = serializeGame(game.game());
+            try (var ps = conn.prepareStatement(statement)) {
+                //ps.setString(1, game.whiteUsername());
+                if (game.whiteUsername() != null){
+                    ps.setString(1, game.whiteUsername());
+                } else {
+                    ps.setNull(1,  NULL);
+                }
+                if (game.blackUsername() != null){
+                    ps.setString(2, game.blackUsername());
+                } else {
+                    ps.setNull(2,  NULL);
+                }
+                ps.setString(3, serializeGame(game.game()));
+                ps.setInt(4, game.gameID());
+                ps.executeUpdate();
+                return game;
+            }
+        }catch (DataAccessException e){
+            System.out.println("Something went wrong." + e);
+        }catch (SQLException e) {
             System.out.println("Something went wrong." + e);
         }
         return null;
@@ -121,7 +136,6 @@ public class MySqlGameDAO implements GameDAO{
         var game = new Gson().fromJson(jsonGame, ChessGame.class);
         return new GameData(GameID, whiteUsername, blackUsername, gameName, game);
     }
-
     private int executeUpdate(String statement, Object... params) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
             try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {

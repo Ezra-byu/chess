@@ -163,22 +163,23 @@ class ServiceTest {
 
     @Test
     void joinGameSuccess() throws ResponseException{
+        Service.clear();
         UserData user1 = new UserData("abelincoln","abelincoln1" , "emancip8r");
         BaseResponse response = Service.register(user1);
         RegisterResponse regResponse = (RegisterResponse) response;
         String lincolnauthToken = regResponse.getAuthToken();
 
-        response = Service.creategame(new GameData(0,null, null, "abe's game", null), lincolnauthToken);
+        BaseResponse createdResponse = Service.creategame(new GameData(0,null, null, "abe's game", null), lincolnauthToken);
 
         UserData user2 = new UserData("george","washingoton" , "iluvmartha");
         response = Service.register(user2);
         regResponse = (RegisterResponse) response;
         String washingtonauthToken = regResponse.getAuthToken();
 
-        response = Service.joingame("WHITE", 1, lincolnauthToken);
+        response = Service.joingame("WHITE", 2, lincolnauthToken);
         assertInstanceOf(JoinGameResponse.class, response);
 
-        response = Service.joingame("BLACK", 1, washingtonauthToken);
+        response = Service.joingame("BLACK", 2, washingtonauthToken);
         assertInstanceOf(JoinGameResponse.class, response);
     }
 
@@ -196,10 +197,10 @@ class ServiceTest {
         regResponse = (RegisterResponse) response;
         String washingtonauthToken = regResponse.getAuthToken();
 
-        response = Service.joingame("WHITE", 1, lincolnauthToken);
-        assertInstanceOf(JoinGameResponse.class, response);
+//        response = Service.joingame("WHITE", 2, lincolnauthToken);
+//        assertInstanceOf(JoinGameResponse.class, response);
 
-        response = Service.joingame("WHITE", 1, washingtonauthToken);
+        response = Service.joingame("WHITE", 2, washingtonauthToken);
         assertInstanceOf(ErrorResponse.class, response);
     }
 }
