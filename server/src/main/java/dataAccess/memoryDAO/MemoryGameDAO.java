@@ -1,12 +1,13 @@
-package dataAccess;
+package dataAccess.memoryDAO;
 
 import chess.ChessGame;
+import dataAccess.GameDAO;
 import model.GameData;
 
 import java.util.Collection;
 import java.util.HashMap;
 
-public class MemoryGameDAO implements GameDAO{
+public class MemoryGameDAO implements GameDAO {
     private int nextId = 1;
     final private HashMap<Integer, GameData> games = new HashMap<>();//{gameID, GameData}
     @Override

@@ -3,13 +3,15 @@ package dataAccessTests;
 import chess.ChessGame;
 import dataAccess.*;
 import exception.ResponseException;
+import model.AuthData;
 import model.GameData;
+import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import service.Service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DatabaseTests{
 
@@ -158,6 +160,162 @@ public class DatabaseTests{
         assertEquals(0, users.size());
     }
 
+    //User Tests:
+    //  getUser
+    //  createUser
+    //  clearUser
+    //  passwordMatch
+    @Test
+    void getUserSuccess(){
+        UserData testUser1 = new UserData("usernabe", "passwurb", "ebail");
+        myUserDAO.createUser(testUser1);
+        UserData returnedUser = myUserDAO.getUser(new UserData("usernabe", null, null));
+        assertEquals(testUser1.email(), returnedUser.email());
+    }
 
 
+    @Test
+    void getUserFailure(){
+        UserData testUser1 = new UserData("usernabe", "passwurb", "ebail");
+        myUserDAO.createUser(testUser1);
+        UserData returnedUser = myUserDAO.getUser(new UserData("usernabe", null, null));
+        assertEquals(testUser1.email(), returnedUser.email());
+    }
+
+    @Test
+    void createUserSuccess(){
+        UserData testUser1 = new UserData("usernabe", "passwurb", "ebail");
+        myUserDAO.createUser(testUser1);
+        UserData testUser2 = new UserData("usernamee", "passwurb", "ebail");
+        myUserDAO.createUser(testUser2);
+
+        UserData returnedUser1 = myUserDAO.getUser(new UserData("usernabe", null, null));
+        UserData returnedUser2 = myUserDAO.getUser(new UserData("usernamee", null, null));
+        assertEquals(returnedUser2.email(), returnedUser1.email()); //were both created? with correct emails for example?
+    }
+
+    @Test
+    void createUserFailure(){
+        UserData testUser3 = new UserData("usernabe", "passwurb", "ebail");
+        myUserDAO.createUser(testUser3);
+
+        UserData returnedUser4 = myUserDAO.getUser(new UserData("usernamee", null, null));
+        assertEquals(null, returnedUser4); //were both created? user 4 should not be found
+    }
+
+    @Test
+    void clearUserSuccess(){
+        UserData testUser4 = new UserData("usernamee", "passwurb", "ebail");
+        myUserDAO.createUser(testUser4);
+        UserData testUser5 = new UserData("usernabe", "passwurb", "ebail");
+        myUserDAO.createUser(testUser5);
+
+
+        myUserDAO.clearUser();
+
+        UserData returnedUser4 = myUserDAO.getUser(new UserData("usernamee", null, null));
+        assertEquals(null, returnedUser4); //were both created? user 4 should not be found
+    }
+
+    @Test
+    void passwordMatchSuccess(){
+        UserData testUser4 = new UserData("usernamee", "samepasswurd", "ebail");
+        myUserDAO.createUser(testUser4);
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String hashedPassword = encoder.encode(testUser4.password());
+
+        Boolean match = myUserDAO.passwordMatch(hashedPassword, testUser4.password());
+        assertTrue(match);
+    }
+
+    @Test
+    void passwordMatchFailure(){
+        UserData testUser5 = new UserData("usernabe", "samepassword", "ebail");
+        myUserDAO.createUser(testUser5);
+
+        Boolean match = myUserDAO.passwordMatch(testUser5.password(), "samepassword");
+        assertFalse(match);
+
+    }
+
+    //Auth tests:
+    //  createAuth
+    //  getAuth
+    //  deleteAuth
+    //  clearAuth
+    //  checkAuth
+
+    @Test
+    void createAuthSuccess() {
+        UserData testauthUser = new UserData("usbe", "password", "email");
+        AuthData testAuth = myAuthDAO.createAuth(testauthUser);
+        assertNotEquals(null, testAuth);
+    }
+
+    @Test
+    void createAuthFailure() {
+        UserData badauthUser = new UserData(null, null, null); // put in bad user
+        AuthData testAuth = myAuthDAO.createAuth(badauthUser);
+        assertEquals(null, testAuth);
+    }
+
+    @Test
+    void getAuthSuccess() {
+        UserData testauthUser2 = new UserData("usbe", "password", "email");
+        AuthData testAuth = myAuthDAO.createAuth(testauthUser2);
+        AuthData returnedAuth = myAuthDAO.getAuth(testAuth.authToken());
+        assertEquals(testAuth, returnedAuth);
+    }
+    @Test
+    void getAuthFailure() {
+        AuthData returnedAuth = myAuthDAO.getAuth("bogusAuthToken");
+        assertNull(returnedAuth);
+    }
+
+    @Test
+    void deleteAuthSuccess() {
+        UserData testauthUser3 = new UserData("usbe", "password", "email");
+
+        UserData testauthUser4 = new UserData("usbasdfe", "pasasfsword", "emafail");
+        AuthData testAuth4 = myAuthDAO.createAuth(testauthUser4);
+
+        myAuthDAO.deleteAuth(testAuth4);
+        AuthData returnedAuth = myAuthDAO.getAuth(testAuth4.authToken());
+        assertNull(returnedAuth);
+    }
+
+    @Test
+    void deleteAuthFailure() {
+        UserData testauthUser3 = new UserData("usbe", "password", "email");
+        AuthData testAuth3 = myAuthDAO.createAuth(testauthUser3);
+
+
+        myAuthDAO.deleteAuth(new AuthData("bogusauthToken", "bogususername"));
+        AuthData returnedAuth = myAuthDAO.getAuth(testAuth3.authToken());
+        assertNotNull(returnedAuth);
+    }
+
+    @Test
+    void clearAuthSuccess() {
+        UserData testauthUser5 = new UserData("usbe", "password", "email");
+        AuthData testAuth5 = myAuthDAO.createAuth(testauthUser5);
+
+        myAuthDAO.clearAuth();
+        AuthData returnedAuth5 = myAuthDAO.getAuth(testAuth5.authToken());
+        assertEquals(null, returnedAuth5);
+    }
+
+    @Test
+    void checkAuthSuccess() {
+        UserData testauthUser6 = new UserData("usbeasdf", "passwasdfafdord", "emaiasfafl");
+        AuthData testAuth6 = myAuthDAO.createAuth(testauthUser6);
+
+        assertTrue(myAuthDAO.checkAuth(testAuth6.authToken()));
+    }
+
+    @Test
+    void checkAuthFailure() {
+        assertFalse(myAuthDAO.checkAuth("bogusAuthToken")); //Should not return true for nonexistant Auth
+    }
 }

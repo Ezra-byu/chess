@@ -1,5 +1,6 @@
-package dataAccess;
+package dataAccess.memoryDAO;
 
+import dataAccess.UserDAO;
 import exception.ResponseException;
 import model.AuthData;
 import model.UserData;
@@ -7,7 +8,7 @@ import model.UserData;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class MemoryUserDAO implements UserDAO{
+public class MemoryUserDAO implements UserDAO {
     final private HashMap<String, UserData> users = new HashMap<>();
 
     @Override
