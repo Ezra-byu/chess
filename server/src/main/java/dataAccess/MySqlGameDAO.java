@@ -37,7 +37,7 @@ public class MySqlGameDAO implements GameDAO{
             var statement = "INSERT INTO game (GameID, whiteUsername, blackUsername, gameName, chess) VALUES (?, ?, ?, ?, ?)";
             var jsonGame = serializeGame(game.game());
             var GameID = nextId++;
-            executeUpdate(statement, GameID, game.whiteUsername(), game.blackUsername(), game.gameName(), jsonGame);
+            executeUpdateGame(statement, GameID, game.whiteUsername(), game.blackUsername(), game.gameName(), jsonGame);
             return new GameData(GameID, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
 
         }
@@ -119,7 +119,7 @@ public class MySqlGameDAO implements GameDAO{
     public void clearGame() {
         try {
             var statement = "TRUNCATE game";
-            executeUpdate(statement);
+            executeUpdateGame(statement);
         }
         catch (DataAccessException e){
             System.out.println("Something went wrong." + e);
@@ -136,19 +136,19 @@ public class MySqlGameDAO implements GameDAO{
         var game = new Gson().fromJson(jsonGame, ChessGame.class);
         return new GameData(GameID, whiteUsername, blackUsername, gameName, game);
     }
-    private int executeUpdate(String statement, Object... params) throws DataAccessException {
+    private int executeUpdateGame(String statement, Object... params) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
+            try (var psGame = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
                 for (var i = 0; i < params.length; i++) {
                     var param = params[i];
-                    if (param instanceof String p) ps.setString(i + 1, p);
-                    else if (param instanceof Integer p) ps.setInt(i + 1, p);
-                    else if (param instanceof GameData p) ps.setString(i + 1, p.toString());
-                    else if (param == null) ps.setNull(i + 1, NULL);
+                    if (param instanceof String p) psGame.setString(i + 1, p);
+                    else if (param instanceof Integer p) psGame.setInt(i + 1, p);
+                    else if (param instanceof GameData p) psGame.setString(i + 1, p.toString());
+                    else if (param == null) psGame.setNull(i + 1, NULL);
                 }
-                ps.executeUpdate();
+                psGame.executeUpdate();
 
-                var rs = ps.getGeneratedKeys();
+                var rs = psGame.getGeneratedKeys();
                 if (rs.next()) {
                     return rs.getInt(1);
                 }

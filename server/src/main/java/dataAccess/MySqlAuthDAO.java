@@ -1,9 +1,7 @@
 package dataAccess;
 
-import com.google.gson.Gson;
 import model.AuthData;
 import model.UserData;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +27,7 @@ public class MySqlAuthDAO implements AuthDAO{
 
             AuthData newauth = new AuthData(UUID.randomUUID().toString(), user.username());
 
-            executeUpdate(statement, newauth.authToken(), newauth.username());
+            executeUpdateAuth(statement, newauth.authToken(), newauth.username());
             return newauth;
             //should return new User with Hashed Password. This is used in the Login Service
         }
@@ -62,7 +60,7 @@ public class MySqlAuthDAO implements AuthDAO{
     public void deleteAuth(AuthData auth) {
         try {
             var statement = "DELETE FROM auth WHERE authToken=?";
-            executeUpdate(statement, auth.authToken());
+            executeUpdateAuth(statement, auth.authToken());
         }
         catch (DataAccessException e){
             System.out.println("Something went wrong." + e);
@@ -73,7 +71,7 @@ public class MySqlAuthDAO implements AuthDAO{
     public void clearAuth() {
         try {
             var statement = "TRUNCATE auth";
-            executeUpdate(statement);
+            executeUpdateAuth(statement);
         }
         catch (DataAccessException e){
             System.out.println("Something went wrong." + e);
@@ -90,18 +88,18 @@ public class MySqlAuthDAO implements AuthDAO{
         }
     }
 
-    private int executeUpdate(String statement, Object... params) throws DataAccessException {
+    private int executeUpdateAuth(String statement, Object... params) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
+            try (var psAuth = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
                 for (var i = 0; i < params.length; i++) {
                     var param = params[i];
-                    if (param instanceof String p) ps.setString(i + 1, p);
-                    else if (param instanceof Integer p) ps.setInt(i + 1, p);
-                    else if (param == null) ps.setNull(i + 1, NULL);
+                    if (param instanceof String p) psAuth.setString(i + 1, p);
+                    else if (param instanceof Integer p) psAuth.setInt(i + 1, p);
+                    else if (param == null) psAuth.setNull(i + 1, NULL);
                 }
-                ps.executeUpdate();
+                psAuth.executeUpdate();
 
-                var rs = ps.getGeneratedKeys();
+                var rs = psAuth.getGeneratedKeys();
                 if (rs.next()) {
                     return rs.getInt(1);
                 }

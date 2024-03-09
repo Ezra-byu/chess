@@ -1,9 +1,5 @@
 package dataAccess;
 
-import chess.ChessGame;
-import com.google.gson.Gson;
-import exception.ResponseException;
-import model.GameData;
 import model.UserData;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -49,7 +45,7 @@ public class MySqlUserDAO implements UserDAO{
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             String hashedPassword = encoder.encode(user.password());
 
-            executeUpdate(statement, user.username(), hashedPassword, user.email());
+            executeUpdateUser(statement, user.username(), hashedPassword, user.email());
             return new UserData(user.username(), hashedPassword, user.email());//should return new User with Hashed Password. This is used in the Login Service
         }
         catch (DataAccessException e){
@@ -62,7 +58,7 @@ public class MySqlUserDAO implements UserDAO{
     public void clearUser() {
         try {
             var statement = "TRUNCATE user";
-            executeUpdate(statement);
+            executeUpdateUser(statement);
         }
         catch (DataAccessException e){
             System.out.println("Something went wrong." + e);
@@ -87,18 +83,18 @@ public class MySqlUserDAO implements UserDAO{
         return new UserData(username, hashedPassword, email);
     }
 
-    private int executeUpdate(String statement, Object... params) throws DataAccessException {
+    private int executeUpdateUser(String statement, Object... params) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
+            try (var psUser = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
                 for (var i = 0; i < params.length; i++) {
                     var param = params[i];
-                    if (param instanceof String p) ps.setString(i + 1, p);
-                    else if (param instanceof Integer p) ps.setInt(i + 1, p);
-                    else if (param == null) ps.setNull(i + 1, NULL);
+                    if (param instanceof String p) psUser.setString(i + 1, p);
+                    else if (param instanceof Integer p) psUser.setInt(i + 1, p);
+                    else if (param == null) psUser.setNull(i + 1, NULL);
                 }
-                ps.executeUpdate();
+                psUser.executeUpdate();
 
-                var rs = ps.getGeneratedKeys();
+                var rs = psUser.getGeneratedKeys();
                 if (rs.next()) {
                     return rs.getInt(1);
                 }
@@ -106,6 +102,7 @@ public class MySqlUserDAO implements UserDAO{
                 return 0;
             }
         } catch (SQLException e) {
+            //catch sql exception
             throw new DataAccessException(String.format("unable to update database: %s, %s", statement, e.getMessage()));
         }
     }
