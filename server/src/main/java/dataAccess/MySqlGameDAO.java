@@ -13,10 +13,17 @@ import java.util.Collection;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
-public class MySqlGameDAO implements GameDAO {
-    private int nextId = 1;
-    //add constructor to call createstatements
-    //chess database initializer
+public class MySqlGameDAO implements GameDAO{
+    private int nextId = 1;//put in constructor?
+    public MySqlGameDAO() {
+        try {
+            configureDatabase(); //creates db & tables if not created
+        }
+        catch (DataAccessException e){
+            System.out.println("Something went wrong." + e);
+        }
+    }
+
 
 
     @Override
@@ -30,11 +37,12 @@ public class MySqlGameDAO implements GameDAO {
             var statement = "INSERT INTO game (GameID, whiteUsername, blackUsername, gameName, chess) VALUES (?, ?, ?, ?, ?)";
             var jsonGame = serializeGame(game.game());
             var GameID = nextId++;
-            executeUpdate(statement, game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), jsonGame);
+            executeUpdate(statement, GameID, game.whiteUsername(), game.blackUsername(), game.gameName(), jsonGame);
             return new GameData(GameID, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
+
         }
         catch (DataAccessException e){
-            System.out.println("Something went wrong.");
+            System.out.println("Something went wrong." + e);
         }
         return null;
     }
@@ -53,6 +61,7 @@ public class MySqlGameDAO implements GameDAO {
             }
         } catch (Exception e) {
             //throw new ResponseException(500, String.format("Unable to read data: %s", e.getMessage()));
+            System.out.println("Something went wrong." + e);
         }
         return null;
     }
@@ -61,7 +70,7 @@ public class MySqlGameDAO implements GameDAO {
     public Collection<GameData> listGames() {
         var result = new ArrayList<GameData>();
         try (var conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT id, json FROM game";
+            var statement = "SELECT GameID, whiteUsername, blackUsername, gameName, chess FROM game";
             try (var ps = conn.prepareStatement(statement)) {
                 try (var rs = ps.executeQuery()) {
                     while (rs.next()) {
@@ -78,12 +87,28 @@ public class MySqlGameDAO implements GameDAO {
 
     @Override
     public GameData updateGame(GameData game) {
+        try {
+            //var statement = "INSERT INTO user (username, password, email) VALUES (?, ?, ?)";
+            //update user set password = 'lololololol', email = 'sharknados' where username = 'usernjhgfame' ;
+            // UPDATE table SET whiteUsername=? WHERE GameID =?"
+            var statement = "UPDATE game SET (whiteUsername, blackUsername, gameName, chess) WHERE GameID =?";
+            executeUpdate(statement, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game(), game.gameID());
+        }
+        catch (DataAccessException e){
+            System.out.println("Something went wrong." + e);
+        }
         return null;
     }
 
     @Override
     public void clearGame() {
-
+        try {
+            var statement = "TRUNCATE game";
+            executeUpdate(statement);
+        }
+        catch (DataAccessException e){
+            System.out.println("Something went wrong." + e);
+        }
     }
 
     private GameData readGameData(ResultSet rs) throws SQLException {
@@ -125,11 +150,11 @@ public class MySqlGameDAO implements GameDAO {
             """
             CREATE TABLE IF NOT EXISTS game (
               `GameID` int NOT NULL,
-              `whiteUsername` varchar DEFAULT NULL,
-              `blackUsername` varchar DEFAULT NULL,
+              `whiteUsername` varchar(256) DEFAULT NULL,
+              `blackUsername` varchar(256) DEFAULT NULL,
               `gameName` varchar(256) NOT NULL,
               `chess` TEXT DEFAULT NULL,
-              PRIMARY KEY (`GameID`),
+              PRIMARY KEY (`GameID`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """
     };
@@ -139,5 +164,18 @@ public class MySqlGameDAO implements GameDAO {
     }
     private ChessGame deSerializeGame(String jsonGame) {
         return new Gson().fromJson(jsonGame, ChessGame.class);
+    }
+
+    private void configureDatabase() throws DataAccessException {
+        DatabaseManager.createDatabase();
+        try (var conn = DatabaseManager.getConnection()) {
+            for (var statement : createStatements) {
+                try (var preparedStatement = conn.prepareStatement(statement)) {
+                    preparedStatement.executeUpdate();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataAccessException(String.format("Unable to configure database: %s", ex.getMessage()));
+        }
     }
 }

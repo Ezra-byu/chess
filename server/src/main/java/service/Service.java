@@ -10,12 +10,13 @@ import java.util.Objects;
 //The Service classes implement the actual functionality of the server.
 //More specifically, the Service classes implement the logic associated with the web endpoints.
 public class Service {
-//    static UserDAO myUserDAO = new MemoryUserDAO(); //change upon completion of SQL database
-    static UserDAO myUserDAO = new MySqlUserDAO();
+    static UserDAO myUserDAO = new MemoryUserDAO(); //change upon completion of SQL database
+//    static UserDAO myUserDAO = new MySqlUserDAO();
 
-//    static AuthDAO myAuthDAO = new MemoryAuthDAO();
-    static AuthDAO myAuthDAO = new MySqlAuthDAO();
-    static GameDAO myGameDAO = new MemoryGameDAO();
+    static AuthDAO myAuthDAO = new MemoryAuthDAO();
+//    static AuthDAO myAuthDAO = new MySqlAuthDAO();
+//    static GameDAO myGameDAO = new MemoryGameDAO();
+    static GameDAO myGameDAO = new MySqlGameDAO();
 
     public static BaseResponse clear(){
         myUserDAO.clearUser();
