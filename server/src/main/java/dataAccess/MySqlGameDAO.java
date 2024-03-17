@@ -37,7 +37,7 @@ public class MySqlGameDAO implements GameDAO{
             var statement = "INSERT INTO game (GameID, whiteUsername, blackUsername, gameName, chess) VALUES (?, ?, ?, ?, ?)";
             var jsonGame = serializeGame(game.game());
             var GameID = nextId++;
-            executeUpdateGame(statement, GameID, game.whiteUsername(), game.blackUsername(), game.gameName(), jsonGame);
+            executeUpdate(statement, GameID, game.whiteUsername(), game.blackUsername(), game.gameName(), jsonGame);
             return new GameData(GameID, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
 
         }
@@ -119,7 +119,7 @@ public class MySqlGameDAO implements GameDAO{
     public void clearGame() {
         try {
             var statement = "TRUNCATE game";
-            executeUpdateGame(statement);
+            executeUpdate(statement);
         }
         catch (DataAccessException e){
             System.out.println("Something went wrong." + e);
@@ -136,7 +136,7 @@ public class MySqlGameDAO implements GameDAO{
         var game = new Gson().fromJson(jsonGame, ChessGame.class);
         return new GameData(GameID, whiteUsername, blackUsername, gameName, game);
     }
-    private int executeUpdateGame(String statement, Object... params) throws DataAccessException {
+    private int executeUpdate(String statement, Object... params) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
             try (var psGame = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
                 for (var i = 0; i < params.length; i++) {
