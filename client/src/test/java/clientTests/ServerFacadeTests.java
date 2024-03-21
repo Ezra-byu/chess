@@ -170,6 +170,13 @@ public class ServerFacadeTests {
     void joinGameFailure() throws ResponseException {
         var createdUser = new UserData("john", "jacob", "jingheimer@gmail");
         var returnedAuth = assertDoesNotThrow(() -> serverFacade.register(createdUser));
+
+        var createdGameRequest = new JoinGameRequest("WHITE", 1);
+        var response = assertThrows(ResponseException.class, () -> serverFacade.joinGame(createdGameRequest, returnedAuth.authToken()));
+
+        GameData createdGame = new GameData(0, null, null, "mygame1", null);
+        var returnedGame = serverFacade.createGame(createdGame, returnedAuth.authToken());
+        assertDoesNotThrow(() -> serverFacade.joinGame(createdGameRequest, returnedAuth.authToken()));
     }
 
 }
