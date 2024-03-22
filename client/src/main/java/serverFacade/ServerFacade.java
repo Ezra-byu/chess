@@ -39,12 +39,6 @@ public class ServerFacade {
     public void logout(String authToken) throws ResponseException {
         var path = "/session";
         this.makeRequest("DELETE", path, null, null, authToken);
-//        try {
-//            var path = "/user";
-//            this.makeRequest("DELETE", path, user, null);
-//        } catch (Exception e) {
-//            System.out.println("500" + "Something went wrong." + e);
-//        }
     }
 
     public GameData[] listGames(String authToken) throws ResponseException {
