@@ -59,7 +59,7 @@ public class ServerFacade {
     }
     public GameData createGame(GameData game, String authToken) throws ResponseException{
         var path = "/game";
-        return this.makeRequest("POST", path, game, GameData.class,authToken);
+        return this.makeRequest("POST", path, game, GameData.class, authToken);
 //        try {
 //            var path = "/game";
 //            return this.makeRequest("POST", path, game, GameData.class);
@@ -87,7 +87,11 @@ public class ServerFacade {
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
             http.setRequestProperty("authorization", authToken);
-            http.setDoOutput(true);
+
+            if(method.equals("GET")){
+                http.setDoOutput(false);
+            }
+            else{http.setDoOutput(true); }
             writeBody(request, http);//serialization and sends
             http.connect();
             throwIfNotSuccessful(http);

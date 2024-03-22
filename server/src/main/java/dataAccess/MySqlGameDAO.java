@@ -38,6 +38,9 @@ public class MySqlGameDAO implements GameDAO{
             var jsonGame = serializeGame(game.game());
             var GameID = nextId++;
             executeUpdate(statement, GameID, game.whiteUsername(), game.blackUsername(), game.gameName(), jsonGame);
+            //added for phase 5 debug
+            System.out.println("Database Game ID " + GameID + " " + game.gameName() + " Database game.whiteUsername " + game.whiteUsername());
+
             return new GameData(GameID, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
 
         }
@@ -105,6 +108,9 @@ public class MySqlGameDAO implements GameDAO{
                 ps.setString(3, serializeGame(game.game()));
                 ps.setInt(4, game.gameID());
                 ps.executeUpdate();
+                //added for phase 5 debug
+                System.out.println("Database gameName " + game.gameName() + " Database white username " + game.whiteUsername()+ " Database black username: " + game.whiteUsername());
+
                 return game;
             }
         }catch (DataAccessException e){

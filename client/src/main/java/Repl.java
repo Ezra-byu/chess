@@ -21,12 +21,13 @@ public class Repl {
     private State state = State.SIGNEDOUT;
     static ServerFacade serverFacade;
     AuthData sessionAuth;
-    Integer sessionGameInt;
+    Integer sessionGameInt = 0;
     HashMap<Integer, GameData> sessionGames= new HashMap<Integer, GameData>();
 
     public Repl(String serverUrl) {
         serverFacade = new ServerFacade(serverUrl);
         sessionGameInt = 0;
+        state = State.SIGNEDOUT;
 //        this.preLogin = preLogin;
 //        this.postLogin = postLogin;
 //        postLogin = new PostLoginMenu(serverUrl);
@@ -65,7 +66,7 @@ public class Repl {
                 case "creategame" -> createGame(params);
                 case "listgames" -> listGames();
                 case "joingame" -> joinGame(params);
-//                case "join observer" -> adoptPet(params);
+                case "joinobserver" -> observeGame(params);
 //                case "adoptall" -> adoptAllPets();
             case "quit" -> "quit";
             default -> help();
@@ -86,6 +87,7 @@ public class Repl {
                 return String.format(" You signed in as %s.", username);
             }
             catch(ResponseException e){
+                state = State.SIGNEDOUT;
                 return(e.toString());
             }
         }
@@ -95,6 +97,9 @@ public class Repl {
     }
 
     public String logIn(String... params){
+        if (state == State.SIGNEDIN) {
+            return "Can not perform command";
+        }
         if (params.length == 2) {
             try {
                 state = State.SIGNEDIN;
@@ -105,6 +110,7 @@ public class Repl {
                 return String.format(" You signed in as %s.", username);
             }
             catch(ResponseException e){
+                state = State.SIGNEDOUT;
                 return(e.toString());
             }
         }
@@ -132,6 +138,7 @@ public class Repl {
                 String gameName = params[0];
                 GameData GameObject = new GameData(0, null, null, gameName, null);
 
+                //System.out.print("game " + gameName + " created ");
                 //hashmap
                 var createdGame = serverFacade.createGame(GameObject, sessionAuth.authToken());
 //                sessionGame += 1;
@@ -153,13 +160,14 @@ public class Repl {
         }
         try {
             var gameList = serverFacade.listGames(sessionAuth.authToken());
-            sessionGameInt += 1;
+            sessionGames.clear();
+            sessionGameInt = 0;
             for (int i = 0; i < gameList.length; i++) {
                 sessionGameInt += 1;
                 sessionGames.put(sessionGameInt, gameList[i]);
             }
             for (Integer i : sessionGames.keySet()) {
-                System.out.println("game: " + i + " value: " + sessionGames.get(i).gameName());
+                System.out.println("game: " + i + " value: " + sessionGames.get(i).gameName() + " Black Player: " + sessionGames.get(i).blackUsername() + " White Player: " + sessionGames.get(i).whiteUsername());
             }
             return ("<end of games>");
         } catch (ResponseException e) {
@@ -176,11 +184,11 @@ public class Repl {
                 String color = params[0];
                 Integer gameNum = Integer.parseInt(params[1]);
                 GameData SelectedGameData = sessionGames.get(gameNum);
-                var createdGameRequest = new JoinGameRequest(color, SelectedGameData.gameID());
+                var createdGameRequest = new JoinGameRequest(color.toUpperCase(), SelectedGameData.gameID());
                 serverFacade.joinGame(createdGameRequest, sessionAuth.authToken());
                 ChessBoardUIUP.main();
                 ChessBoardUIDOWN.main();
-                return ("game " + gameNum + " joined");
+                return ("game " + gameNum + " " + SelectedGameData.gameName() + " joined");
             } catch (ResponseException e) {
                 return (e.toString());
             }
@@ -190,7 +198,7 @@ public class Repl {
     }
 
     public String observeGame(String... params){
-        if (params.length == 2) {
+        if (params.length == 1) {
             if (state == State.SIGNEDOUT) {
                 return "Can not perform command";
             }
@@ -206,7 +214,7 @@ public class Repl {
                 return (e.toString());
             }
         }else{
-            return "Please enter a color WHITE or BLACK and game number";
+            return "Please enter a game number to join";
         }
     }
 
@@ -224,8 +232,8 @@ public class Repl {
                 - logout
                 - creategame <gamename>
                 - listgames
-                - join game <WHITE/BLACK> <#>
-                - join observer <#>
+                - joingame <WHITE/BLACK> <#>
+                - joinobserver <#>
                 """;
     }
     private void printPrompt() {

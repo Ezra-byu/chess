@@ -195,7 +195,7 @@ public class ChessBoardUIDOWN {
 //                    piece = WHITE_ROOK;
 //                    PIECE_COLOR =
 //                }
-        if(boardRow == 7 && boardCol == 7) {
+        if(boardRow == 7 && boardCol == 0) {
             piece = BLACK_ROOK;
             PIECE_COLOR = "black";
         }
