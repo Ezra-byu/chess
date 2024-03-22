@@ -6,6 +6,7 @@ import model.GameData;
 import model.JoinGameRequest;
 import model.UserData;
 import serverFacade.ServerFacade;
+import ui.ChessBoardUI;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -176,6 +177,7 @@ public class Repl {
                 GameData SelectedGameData = sessionGames.get(gameNum);
                 var createdGameRequest = new JoinGameRequest(color, SelectedGameData.gameID());
                 serverFacade.joinGame(createdGameRequest, sessionAuth.authToken());
+                ChessBoardUI.main();
                 return ("game " + gameNum + " joined");
             } catch (ResponseException e) {
                 return (e.toString());
