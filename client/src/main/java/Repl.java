@@ -3,10 +3,12 @@
 import exception.ResponseException;
 import model.AuthData;
 import model.GameData;
+import model.JoinGameRequest;
 import model.UserData;
 import serverFacade.ServerFacade;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -17,9 +19,12 @@ public class Repl {
     private State state = State.SIGNEDOUT;
     static ServerFacade serverFacade;
     AuthData sessionAuth;
+    Integer sessionGameInt;
+    HashMap<Integer, GameData> sessionGames= new HashMap<Integer, GameData>();
 
     public Repl(String serverUrl) {
         serverFacade = new ServerFacade(serverUrl);
+        sessionGameInt = 0;
 //        this.preLogin = preLogin;
 //        this.postLogin = postLogin;
 //        postLogin = new PostLoginMenu(serverUrl);
@@ -57,7 +62,7 @@ public class Repl {
                 case "logout" -> logOut(params);
                 case "creategame" -> createGame(params);
                 case "listgames" -> listGames();
-//                case "join game" -> signOut();
+                case "joingame" -> joinGame(params);
 //                case "join observer" -> adoptPet(params);
 //                case "adoptall" -> adoptAllPets();
             case "quit" -> "quit";
@@ -117,17 +122,23 @@ public class Repl {
     }
 
     public String createGame(String... params){
-        if (params.length == 2) {
+        if (params.length == 1) {
             if (state == State.SIGNEDOUT) {
                 return "Can not perform command";
             }
             try {
                 String gameName = params[0];
                 GameData GameObject = new GameData(0, null, null, gameName, null);
-                serverFacade.createGame(GameObject, sessionAuth.authToken());
+
+                //hashmap
+                var createdGame = serverFacade.createGame(GameObject, sessionAuth.authToken());
+//                sessionGame += 1;
+//                sessionGames.put(sessionGame, createdGame);
+
                 return ("game " + gameName + " created");
             } catch (ResponseException e) {
-                return (e.toString());
+                //return (e.toString());
+                return(" ");
             }
         }else{
             return "Please enter a game name";
@@ -140,12 +151,37 @@ public class Repl {
         }
         try {
             var gameList = serverFacade.listGames(sessionAuth.authToken());
+            sessionGameInt += 1;
             for (int i = 0; i < gameList.length; i++) {
-                System.out.println(gameList[i].gameName());
+                sessionGameInt += 1;
+                sessionGames.put(sessionGameInt, gameList[i]);
+            }
+            for (Integer i : sessionGames.keySet()) {
+                System.out.println("game: " + i + " value: " + sessionGames.get(i).gameName());
             }
             return ("<end of games>");
         } catch (ResponseException e) {
             return (e.toString());
+        }
+    }
+
+    public String joinGame(String... params){
+        if (params.length == 2) {
+            if (state == State.SIGNEDOUT) {
+                return "Can not perform command";
+            }
+            try {
+                String color = params[0];
+                Integer gameNum = Integer.parseInt(params[1]);
+                GameData SelectedGameData = sessionGames.get(gameNum);
+                var createdGameRequest = new JoinGameRequest(color, SelectedGameData.gameID());
+                serverFacade.joinGame(createdGameRequest, sessionAuth.authToken());
+                return ("game " + gameNum + " joined");
+            } catch (ResponseException e) {
+                return (e.toString());
+            }
+        }else{
+            return "Please enter a color WHITE or BLACK and game number";
         }
     }
 
@@ -163,8 +199,8 @@ public class Repl {
                 - logout
                 - creategame <gamename>
                 - listgames
-                - join game
-                - join observer
+                - join game <WHITE/BLACK> <#>
+                - join observer <#>
                 """;
     }
     private void printPrompt() {
