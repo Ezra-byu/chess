@@ -6,7 +6,8 @@ import model.GameData;
 import model.JoinGameRequest;
 import model.UserData;
 import serverFacade.ServerFacade;
-import ui.ChessBoardUI;
+import ui.ChessBoardUIDOWN;
+import ui.ChessBoardUIUP;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -177,8 +178,30 @@ public class Repl {
                 GameData SelectedGameData = sessionGames.get(gameNum);
                 var createdGameRequest = new JoinGameRequest(color, SelectedGameData.gameID());
                 serverFacade.joinGame(createdGameRequest, sessionAuth.authToken());
-                ChessBoardUI.main();
+                ChessBoardUIUP.main();
+                ChessBoardUIDOWN.main();
                 return ("game " + gameNum + " joined");
+            } catch (ResponseException e) {
+                return (e.toString());
+            }
+        }else{
+            return "Please enter a color WHITE or BLACK and game number";
+        }
+    }
+
+    public String observeGame(String... params){
+        if (params.length == 2) {
+            if (state == State.SIGNEDOUT) {
+                return "Can not perform command";
+            }
+            try {
+                Integer gameNum = Integer.parseInt(params[0]);
+                GameData SelectedGameData = sessionGames.get(gameNum);
+                var createdGameRequest = new JoinGameRequest(null, SelectedGameData.gameID());
+                serverFacade.joinGame(createdGameRequest, sessionAuth.authToken());
+                ChessBoardUIUP.main();
+                ChessBoardUIDOWN.main();
+                return ("observing game " + gameNum);
             } catch (ResponseException e) {
                 return (e.toString());
             }

@@ -5,11 +5,10 @@ package ui;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.Random;
 
 import static ui.EscapeSequences.*;
 
-public class ChessBoardUI {
+public class ChessBoardUIDOWN {
 
     private static final int BOARD_SIZE_IN_SQUARES = 8;
     private static final int SQUARE_SIZE_IN_CHARS = 3;
@@ -34,7 +33,7 @@ public class ChessBoardUI {
 
         setDarkGray(out);
 
-        String[] headers = { " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h " };
+        String[] headers = { " h ", " g ", " f ", " e ", " d ", " c ", " b ", " a " };
         for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
             drawHeader(out, headers[boardCol]);
 
@@ -97,7 +96,7 @@ public class ChessBoardUI {
         for (int squareRow = 0; squareRow < SQUARE_SIZE_IN_CHARS; ++squareRow) {
             for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
                 // String[] siders = { " 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 " };
-                String[] siders = { " 8 ", " 7 ", " 6 ", " 5 ", " 4 ", " 3 ", " 2 ", " 1 " };
+                String[] siders = { " 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 " };
                 if (boardCol == 0){printSiderText( out, siders[boardRow],  squareRow);}
 
                 String background = "black";
@@ -196,131 +195,131 @@ public class ChessBoardUI {
 //                    piece = WHITE_ROOK;
 //                    PIECE_COLOR =
 //                }
-        if(boardRow == 0 && boardCol == 0) {
+        if(boardRow == 7 && boardCol == 7) {
             piece = BLACK_ROOK;
-            PIECE_COLOR = "black";
-        }
-        else if(boardRow == 0 && boardCol == 1) {
-            piece = BLACK_KNIGHT;
-            PIECE_COLOR = "black";
-        }
-        else if(boardRow == 0 && boardCol == 2) {
-            piece = BLACK_BISHOP;
-            PIECE_COLOR = "black";
-        }
-        else if(boardRow == 0 && boardCol == 3) {
-            piece = BLACK_QUEEN;
-            PIECE_COLOR = "black";
-        }
-        else if(boardRow == 0 && boardCol == 4) {
-            piece = BLACK_KING;
-            PIECE_COLOR = "black";
-        }
-        else if(boardRow == 0 && boardCol == 5) {
-            piece = BLACK_BISHOP;
-            PIECE_COLOR = "black";
-        }
-        else if(boardRow == 0 && boardCol == 6) {
-            piece = BLACK_KNIGHT;
-            PIECE_COLOR = "black";
-        }
-        else if(boardRow == 0 && boardCol == 7) {
-            piece = BLACK_ROOK;
-            PIECE_COLOR = "black";
-        }
-        else if(boardRow == 1 && boardCol == 0) {
-            piece = BLACK_PAWN;
-            PIECE_COLOR = "black";
-        }
-        else if(boardRow == 1 && boardCol == 1) {
-            piece = BLACK_PAWN;
-            PIECE_COLOR = "black";
-        }
-        else if(boardRow == 1 && boardCol == 2) {
-            piece = BLACK_PAWN;
-            PIECE_COLOR = "black";
-        }
-        else if(boardRow == 1 && boardCol == 3) {
-            piece = BLACK_PAWN;
-            PIECE_COLOR = "black";
-        }
-        else if(boardRow == 1 && boardCol == 4) {
-            piece = BLACK_PAWN;
-            PIECE_COLOR = "black";
-        }
-        else if(boardRow == 1 && boardCol == 5) {
-            piece = BLACK_PAWN;
-            PIECE_COLOR = "black";
-        }
-        else if(boardRow == 1 && boardCol == 6) {
-            piece = BLACK_PAWN;
-            PIECE_COLOR = "black";
-        }
-        else if(boardRow == 1 && boardCol == 7) {
-            piece = BLACK_PAWN;
-            PIECE_COLOR = "black";
-        }
-        else if(boardRow == 6 && boardCol == 0) {
-            piece = WHITE_PAWN;
-            PIECE_COLOR = "white";
-        }
-        else if(boardRow == 6 && boardCol == 1) {
-            piece = WHITE_PAWN;
-            PIECE_COLOR = "white";
-        }
-        else if(boardRow == 6 && boardCol == 2) {
-            piece = WHITE_PAWN;
-            PIECE_COLOR = "white";
-        }
-        else if(boardRow == 6 && boardCol == 3) {
-            piece = WHITE_PAWN;
-            PIECE_COLOR = "white";
-        }
-        else if(boardRow == 6 && boardCol == 4) {
-            piece = WHITE_PAWN;
-            PIECE_COLOR = "white";
-        }
-        else if(boardRow == 6 && boardCol == 5) {
-            piece = WHITE_PAWN;
-            PIECE_COLOR = "white";
-        }
-        else if(boardRow == 6 && boardCol == 6) {
-            piece = WHITE_PAWN;
-            PIECE_COLOR = "white";
-        }
-        else if(boardRow == 6 && boardCol == 7) {
-            piece = WHITE_PAWN;
-            PIECE_COLOR = "white";
-        }
-        else if(boardRow == 7 && boardCol == 0) {
-            piece = WHITE_ROOK;
             PIECE_COLOR = "black";
         }
         else if(boardRow == 7 && boardCol == 1) {
-            piece = WHITE_KNIGHT;
+            piece = BLACK_KNIGHT;
             PIECE_COLOR = "black";
         }
         else if(boardRow == 7 && boardCol == 2) {
-            piece = WHITE_BISHOP;
-            PIECE_COLOR = "black";
-        }
-        else if(boardRow == 7 && boardCol == 3) {
-            piece = WHITE_QUEEN;
+            piece = BLACK_BISHOP;
             PIECE_COLOR = "black";
         }
         else if(boardRow == 7 && boardCol == 4) {
-            piece = WHITE_KING;
+            piece = BLACK_QUEEN;
+            PIECE_COLOR = "black";
+        }
+        else if(boardRow == 7 && boardCol == 3) {
+            piece = BLACK_KING;
             PIECE_COLOR = "black";
         }
         else if(boardRow == 7 && boardCol == 5) {
-            piece = WHITE_BISHOP;
+            piece = BLACK_BISHOP;
             PIECE_COLOR = "black";
         }
         else if(boardRow == 7 && boardCol == 6) {
-            piece = WHITE_KNIGHT;
+            piece = BLACK_KNIGHT;
             PIECE_COLOR = "black";
         }
         else if(boardRow == 7 && boardCol == 7) {
+            piece = BLACK_ROOK;
+            PIECE_COLOR = "black";
+        }
+        else if(boardRow == 6 && boardCol == 0) {
+            piece = BLACK_PAWN;
+            PIECE_COLOR = "black";
+        }
+        else if(boardRow == 6 && boardCol == 1) {
+            piece = BLACK_PAWN;
+            PIECE_COLOR = "black";
+        }
+        else if(boardRow == 6 && boardCol == 2) {
+            piece = BLACK_PAWN;
+            PIECE_COLOR = "black";
+        }
+        else if(boardRow == 6 && boardCol == 3) {
+            piece = BLACK_PAWN;
+            PIECE_COLOR = "black";
+        }
+        else if(boardRow == 6 && boardCol == 4) {
+            piece = BLACK_PAWN;
+            PIECE_COLOR = "black";
+        }
+        else if(boardRow == 6 && boardCol == 5) {
+            piece = BLACK_PAWN;
+            PIECE_COLOR = "black";
+        }
+        else if(boardRow == 6 && boardCol == 6) {
+            piece = BLACK_PAWN;
+            PIECE_COLOR = "black";
+        }
+        else if(boardRow == 6 && boardCol == 7) {
+            piece = BLACK_PAWN;
+            PIECE_COLOR = "black";
+        }
+        else if(boardRow == 1 && boardCol == 0) {
+            piece = WHITE_PAWN;
+            PIECE_COLOR = "white";
+        }
+        else if(boardRow == 1 && boardCol == 1) {
+            piece = WHITE_PAWN;
+            PIECE_COLOR = "white";
+        }
+        else if(boardRow == 1 && boardCol == 2) {
+            piece = WHITE_PAWN;
+            PIECE_COLOR = "white";
+        }
+        else if(boardRow == 1 && boardCol == 3) {
+            piece = WHITE_PAWN;
+            PIECE_COLOR = "white";
+        }
+        else if(boardRow == 1 && boardCol == 4) {
+            piece = WHITE_PAWN;
+            PIECE_COLOR = "white";
+        }
+        else if(boardRow == 1 && boardCol == 5) {
+            piece = WHITE_PAWN;
+            PIECE_COLOR = "white";
+        }
+        else if(boardRow == 1 && boardCol == 6) {
+            piece = WHITE_PAWN;
+            PIECE_COLOR = "white";
+        }
+        else if(boardRow == 1 && boardCol == 7) {
+            piece = WHITE_PAWN;
+            PIECE_COLOR = "white";
+        }
+        else if(boardRow == 0 && boardCol == 0) {
+            piece = WHITE_ROOK;
+            PIECE_COLOR = "black";
+        }
+        else if(boardRow == 0 && boardCol == 1) {
+            piece = WHITE_KNIGHT;
+            PIECE_COLOR = "black";
+        }
+        else if(boardRow == 0 && boardCol == 2) {
+            piece = WHITE_BISHOP;
+            PIECE_COLOR = "black";
+        }
+        else if(boardRow == 0 && boardCol == 4) {
+            piece = WHITE_QUEEN;
+            PIECE_COLOR = "black";
+        }
+        else if(boardRow == 0 && boardCol == 3) {
+            piece = WHITE_KING;
+            PIECE_COLOR = "black";
+        }
+        else if(boardRow == 0 && boardCol == 5) {
+            piece = WHITE_BISHOP;
+            PIECE_COLOR = "black";
+        }
+        else if(boardRow == 0 && boardCol == 6) {
+            piece = WHITE_KNIGHT;
+            PIECE_COLOR = "black";
+        }
+        else if(boardRow == 0 && boardCol == 7) {
             piece = WHITE_ROOK;
             PIECE_COLOR = "black";
         }
