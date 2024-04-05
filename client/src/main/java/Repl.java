@@ -12,6 +12,7 @@ import ui.ChessBoardUIUP;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
+import chess.*;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -19,6 +20,7 @@ public class Repl {
 //    private final PostLoginMenu postLogin;
 //    private final PreLoginMenu preLogin;
     private State state = State.SIGNEDOUT;
+    private GameState gamestate = GameState.NOTINGAME;
     static ServerFacade serverFacade;
     AuthData sessionAuth;
     Integer sessionGameInt = 0;
