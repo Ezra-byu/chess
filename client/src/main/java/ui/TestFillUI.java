@@ -210,44 +210,44 @@ public class TestFillUI {
             //This file runs on 0-7 index. ChessBoard expects 1-8
             ChessPosition piecePosition = new ChessPosition(boardRow+1, boardCol+1);
             ChessPiece pieceToPlace = testboard.getPiece(piecePosition);
-            piece = " " + boardRow + boardCol;
-//            if (pieceToPlace == null) {
-//                piece = EMPTY;
-//            } else {
-//                if (pieceToPlace.getTeamColor() == ChessGame.TeamColor.WHITE){
-//                    if (pieceToPlace.getPieceType() == KING) {
-//                        piece = WHITE_KING;
-//                    } else if (pieceToPlace.getPieceType() == QUEEN) {
-//                        piece = WHITE_QUEEN;
-//                    } else if (pieceToPlace.getPieceType() == BISHOP) {
-//                        piece = WHITE_BISHOP;
-//                    } else if (pieceToPlace.getPieceType() == KNIGHT) {
-//                        piece = WHITE_KNIGHT;
-//                    } else if (pieceToPlace.getPieceType() == ROOK) {
-//                        piece = WHITE_ROOK;
-//                    } else if (pieceToPlace.getPieceType() == PAWN) {
-//                        piece = WHITE_PAWN;
-//                    } else { //should never happen
-//                        piece = EMPTY;
-//                    }
-//                } else if (pieceToPlace.getTeamColor() == ChessGame.TeamColor.BLACK) {
-//                    if (pieceToPlace.getPieceType() == KING) {
-//                        piece = BLACK_KING;
-//                    } else if (pieceToPlace.getPieceType() == QUEEN) {
-//                        piece = BLACK_QUEEN;
-//                    } else if (pieceToPlace.getPieceType() == BISHOP) {
-//                        piece = BLACK_BISHOP;
-//                    } else if (pieceToPlace.getPieceType() == KNIGHT) {
-//                        piece = BLACK_KNIGHT;
-//                    } else if (pieceToPlace.getPieceType() == ROOK) {
-//                        piece = BLACK_ROOK;
-//                    } else if (pieceToPlace.getPieceType() == PAWN) {
-//                        piece = BLACK_PAWN;
-//                    } else { //should never happen
-//                        piece = EMPTY;
-//                    }
-//                }
-//            }
+            //piece = " " + boardRow + boardCol;
+            if (pieceToPlace == null) {
+                piece = EMPTY;
+            } else {
+                if (pieceToPlace.getTeamColor() == ChessGame.TeamColor.WHITE){
+                    if (pieceToPlace.getPieceType() == KING) {
+                        piece = WHITE_KING;
+                    } else if (pieceToPlace.getPieceType() == QUEEN) {
+                        piece = WHITE_QUEEN;
+                    } else if (pieceToPlace.getPieceType() == BISHOP) {
+                        piece = WHITE_BISHOP;
+                    } else if (pieceToPlace.getPieceType() == KNIGHT) {
+                        piece = WHITE_KNIGHT;
+                    } else if (pieceToPlace.getPieceType() == ROOK) {
+                        piece = WHITE_ROOK;
+                    } else if (pieceToPlace.getPieceType() == PAWN) {
+                        piece = WHITE_PAWN;
+                    } else { //should never happen
+                        piece = EMPTY;
+                    }
+                } else if (pieceToPlace.getTeamColor() == ChessGame.TeamColor.BLACK) {
+                    if (pieceToPlace.getPieceType() == KING) {
+                        piece = BLACK_KING;
+                    } else if (pieceToPlace.getPieceType() == QUEEN) {
+                        piece = BLACK_QUEEN;
+                    } else if (pieceToPlace.getPieceType() == BISHOP) {
+                        piece = BLACK_BISHOP;
+                    } else if (pieceToPlace.getPieceType() == KNIGHT) {
+                        piece = BLACK_KNIGHT;
+                    } else if (pieceToPlace.getPieceType() == ROOK) {
+                        piece = BLACK_ROOK;
+                    } else if (pieceToPlace.getPieceType() == PAWN) {
+                        piece = BLACK_PAWN;
+                    } else { //should never happen
+                        piece = EMPTY;
+                    }
+                }
+            }
 
             if (Objects.equals(background, "white")){
                 out.print(SET_BG_COLOR_LIGHT_GREY);
