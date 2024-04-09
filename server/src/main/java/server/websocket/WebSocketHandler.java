@@ -3,21 +3,36 @@ package server.websocket;
 import com.google.gson.Gson;
 import exception.ResponseException;
 import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import webSocketMessages.Action;
 import webSocketMessages.Notification;
+import webSocketMessages.userCommands.UserGameCommand;
 
 import java.io.IOException;
+import java.util.Objects;
 
 
 @WebSocket
 public class WebSocketHandler {
 
     private final ConnectionManager connections = new ConnectionManager();
-
+    @OnWebSocketConnect
+    //onConnect
+    @OnWebSocketClose
+    //
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws IOException {
+        Action action = new Gson().fromJson(message, Action.class);
+        if (Objects.equals(message, "JOIN_PLAYER")){//UserGameCommand.CommandType.JOIN_PLAYER
+
+        }
+        //determine message type
+        //call onw or more of the follwoing messages
+        //joinplayermessage, joinObserver, makMove,// gameSecive.method(), sendMessafe(..), broadcastMessage(...)
+        //see connection manager
         Action action = new Gson().fromJson(message, Action.class);
         switch (action.type()) {
             case ENTER -> enter(action.visitorName(), session);

@@ -187,9 +187,15 @@ public class Repl {
                 Integer gameNum = Integer.parseInt(params[1]);
                 GameData SelectedGameData = sessionGames.get(gameNum);
                 var createdGameRequest = new JoinGameRequest(color.toUpperCase(), SelectedGameData.gameID());
+                //Call the server join API to join them to the game (or verify the game exists if they are observing).
                 serverFacade.joinGame(createdGameRequest, sessionAuth.authToken());
-                ChessBoardUIUP.main();
-                ChessBoardUIDOWN.main();
+
+                //In phase 6 websocket server send LOAD_GAME which takes care of this
+//                ChessBoardUIUP.main();
+//                ChessBoardUIDOWN.main();
+                //Open a WebSocket connection with the server (using the /connect endpoint) so it can send and receive gameplay messages.
+
+
                 return ("game " + gameNum + " " + SelectedGameData.gameName() + " joined");
             } catch (ResponseException e) {
                 return (e.toString());

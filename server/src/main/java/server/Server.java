@@ -3,13 +3,16 @@ package server;
 import com.google.gson.Gson;
 import model.*;
 import model.responses.BaseResponse;
+import server.websocket.WebSocketHandler;
 import spark.*;
 import service.Service;
 
 public class Server {
 
     private final Service registerService = new Service(); // on Pet service what does this do?
-    //private final WebSocketHandler webSocketHandler;
+    private final WebSocketHandler webSocketHandler = new WebSocketHandler();
+
+
 
     public int run(int desiredPort) { //this one returns an int. Know that pet returns PetServer
         Spark.port(desiredPort);
@@ -17,6 +20,7 @@ public class Server {
         Spark.staticFiles.location("web");
 
         // Register your endpoints and handle exceptions here.
+        Spark.webSocket("/connect", webSocketHandler);
 
         Spark.post("/user", this::register);
         Spark.delete("/db", this::clear);
