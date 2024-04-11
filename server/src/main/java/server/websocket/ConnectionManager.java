@@ -1,7 +1,7 @@
 package server.websocket;
 
 import org.eclipse.jetty.websocket.api.Session;
-import webSocketMessages.Notification;
+//import webSocketMessages.*;
 import webSocketMessages.serverMessages.ServerMessage;
 
 import java.io.IOException;
@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionManager { //organizes session objects
-    public final ConcurrentHashMap<String, Connection> connections = new ConcurrentHashMap<>(); //gameID, session
+    public final ConcurrentHashMap<Integer, Connection> connections = new ConcurrentHashMap<>(); //gameID, Connection(authToken, Session)
 
-    public void add(String visitorName, Session session) {
-        var connection = new Connection(visitorName, session);
-        connections.put(visitorName, connection);
+    public void add(Integer gameID, String authToken, Session session) {
+        var connection = new Connection(authToken, session);
+        connections.put(gameID, connection);
     }
 
     public void remove(String visitorName) {
@@ -26,7 +26,7 @@ public class ConnectionManager { //organizes session objects
     var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
-                if (!c.visitorName.equals(excludeVisitorName)) {
+                if (!c.AuthToken.equals(excludeVisitorName)) {
                     c.send(notification.toString()); //should be Server message body?
                 }
             } else {
@@ -36,7 +36,12 @@ public class ConnectionManager { //organizes session objects
 
         // Clean up any connections that were left open.
         for (var c : removeList) {
-            connections.remove(c.visitorName);
+            connections.remove(c.AuthToken);
         }
+    }
+
+
+    public Connection getConnection(String authToken, Session session) {
+        return new Connection(authToken, session);
     }
 }
