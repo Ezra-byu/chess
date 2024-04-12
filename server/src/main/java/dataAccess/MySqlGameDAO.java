@@ -172,7 +172,7 @@ public class MySqlGameDAO implements GameDAO{
               `whiteUsername` varchar(256) DEFAULT NULL,
               `blackUsername` varchar(256) DEFAULT NULL,
               `gameName` varchar(256) NOT NULL,
-              `chess` TEXT DEFAULT NULL,
+              `chess` TEXT DEFAULT NULL,s
               PRIMARY KEY (`GameID`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """
@@ -181,9 +181,7 @@ public class MySqlGameDAO implements GameDAO{
     private String serializeGame(ChessGame game) {
         return new Gson().toJson(game);
     }
-    private ChessGame deSerializeGame(String jsonGame) {
-        return new Gson().fromJson(jsonGame, ChessGame.class);
-    }
+    //private ChessGame deSerializeGame(String jsonGame) {return new Gson().fromJson(jsonGame, ChessGame.class);}
 
     private void configureDatabase() throws DataAccessException {
         DatabaseManager.createDatabase();
