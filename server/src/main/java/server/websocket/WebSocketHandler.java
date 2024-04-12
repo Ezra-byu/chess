@@ -1,10 +1,9 @@
 package server.websocket;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
-import dataAccess.GameDAO;
-import dataAccess.MySqlGameDAO;
-import dataAccess.MySqlUserDAO;
-import dataAccess.UserDAO;
+import dataAccess.*;
+import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -17,12 +16,14 @@ import webSocketMessages.userCommands.JoinPlayerCommand;
 import webSocketMessages.userCommands.UserGameCommand;
 
 import java.io.IOException;
+import java.util.Objects;
 
 
 @WebSocket
 public class WebSocketHandler {
     private GameDAO myGameDAO = new MySqlGameDAO();
     private UserDAO myUserDAO = new MySqlUserDAO();
+    private AuthDAO myAuthDAO = new MySqlAuthDAO();
 
     private final ConnectionManager connections = new ConnectionManager();
     //@OnWebSocketConnect
@@ -54,8 +55,23 @@ public class WebSocketHandler {
             JoinPlayerCommand joinCommand = new Gson().fromJson(msg, JoinPlayerCommand.class);
             String authToken = joinCommand.getAuthString();
             Integer gameID = joinCommand.getGameID();
+            ChessGame.TeamColor playerColor = joinCommand.getPlayerColor();
             connections.add(joinCommand.getGameID(), authToken, conn.session);
-            //Game DAO call
+
+            //Game DAO call, get the game, see if the usernames are the same
+            GameData gameToJoin = myGameDAO.getGame(gameID);
+            String joinCommandUsername = myAuthDAO.getAuth(authToken).username();
+            String httpWhiteUsername = gameToJoin.whiteUsername();
+            String httpBlackUsername = gameToJoin.blackUsername();
+            //if requesting black, joincommandUsername should match httpBlackUsername
+            //if requesting white, joincommand username should match http WhiteUsername
+            if(playerColor == ChessGame.TeamColor.WHITE){
+                if(!Objects.equals(joinCommandUsername, gameToJoin.whiteUsername())){
+                    ErrorMessage errorMessage = new
+                    connections.rootusersend(authToken, gameID, errorMessage);
+                }
+            } else if()
+
             LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, myGameDAO.getGame(joinCommand.getGameID()));
             //Server sends a LOAD_GAME message back to the root client.
             connections.rootusersend(authToken, gameID, loadGameMessage);
@@ -74,5 +90,6 @@ public class WebSocketHandler {
     private void observe(Connection conn, String msg){
 
     }
+
 
 }

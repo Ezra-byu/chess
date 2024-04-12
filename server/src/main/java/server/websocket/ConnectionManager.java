@@ -3,6 +3,8 @@ package server.websocket;
 import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
 //import webSocketMessages.*;
+import webSocketMessages.serverMessages.LoadGameMessage;
+import webSocketMessages.serverMessages.NotificationMessage;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.JoinPlayerCommand;
 
@@ -24,7 +26,7 @@ public class ConnectionManager { //organizes session objects
 
     //public void broadcast(String excludeVisitorName, Notification notification) throws IOException {
     //notification = ServerMessage
-    public void broadcast(String visitorName, Integer gameID, ServerMessage notification) throws IOException {
+    public void broadcast(String visitorName, Integer gameID, NotificationMessage notification) throws IOException {
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
@@ -32,7 +34,7 @@ public class ConnectionManager { //organizes session objects
                     //make sure same game c.gameID.equals(gameID)
                     if (c.gameID.equals(gameID)) {
                         System.out.print("broadcast: " + c);
-                        c.send(notification.toString());
+                        c.send(notification);
                     }
                 }
             } else {
@@ -45,15 +47,17 @@ public class ConnectionManager { //organizes session objects
         }
     }
 
-    public void rootusersend(String visitorName, Integer gameID, ServerMessage notification) throws IOException {
+    public void rootusersend(String visitorName, Integer gameID, ServerMessage serverMessage) throws IOException {
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
                 if (c.authToken.equals(visitorName)) {
                     //make sure same game c.gameID.equals(gameID)
                     if (c.gameID.equals(gameID)) {
-                        System.out.print("root user: " + notification);
-                        c.send(notification.toString());
+                        System.out.print("root user: " + serverMessage);
+                        //c.send(loadgameMessage.toString());
+                        //send takes care of the Gson serialization
+                        c.send(serverMessage);
                     }
                 }
             } else {
