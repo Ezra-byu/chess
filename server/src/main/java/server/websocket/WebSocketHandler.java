@@ -117,6 +117,11 @@ public class WebSocketHandler {
                 connections.rootusersend(authToken, gameID, errorMessage);
                 return;
             }
+            if (!myAuthDAO.checkAuth(authToken)){
+                ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Bad auth");
+                connections.rootusersend(authToken, gameID, errorMessage);
+                return;
+            }
 
             String observeCommandUsername = myAuthDAO.getAuth(authToken).username();
 
