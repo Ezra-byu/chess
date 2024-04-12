@@ -61,6 +61,13 @@ public class WebSocketHandler {
 
             //Game DAO call, get the game, see if the usernames are the same
             GameData gameToJoin = myGameDAO.getGame(gameID);
+
+            if (gameToJoin == null){
+                ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: no game exists");
+                connections.rootusersend(authToken, gameID, errorMessage);
+                return;
+            }
+
             String joinCommandUsername = myAuthDAO.getAuth(authToken).username();
             String httpWhiteUsername = gameToJoin.whiteUsername();
             String httpBlackUsername = gameToJoin.blackUsername();
