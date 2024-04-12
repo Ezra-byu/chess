@@ -9,6 +9,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 //import webSocketMessages.Action;
 //import webSocketMessages.Notification;
+import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.NotificationMessage;
 import webSocketMessages.serverMessages.ServerMessage;
@@ -67,11 +68,15 @@ public class WebSocketHandler {
             //if requesting white, joincommand username should match http WhiteUsername
             if(playerColor == ChessGame.TeamColor.WHITE){
                 if(!Objects.equals(joinCommandUsername, gameToJoin.whiteUsername())){
-                    ErrorMessage errorMessage = new
+                    ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "wrong color selected");
                     connections.rootusersend(authToken, gameID, errorMessage);
                 }
-            } else if()
-
+            } else if(playerColor == ChessGame.TeamColor.BLACK){
+                if(!Objects.equals(joinCommandUsername, gameToJoin.blackUsername())){
+                    ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "wrong color selected");
+                    connections.rootusersend(authToken, gameID, errorMessage);
+                }
+            }
             LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, myGameDAO.getGame(joinCommand.getGameID()));
             //Server sends a LOAD_GAME message back to the root client.
             connections.rootusersend(authToken, gameID, loadGameMessage);
@@ -82,13 +87,44 @@ public class WebSocketHandler {
             connections.broadcast(authToken, gameID, notification);
         }
         catch (IOException e){
-            System.out.println("Something went wrong in websocket handler join." + e);
+            System.out.println("Something went wrong in websocket handler join: " + e);
         }
 
     }
 
+//    Boolean joinVerification(Connection conn, String msg){
+//        try {
+//            JoinPlayerCommand joinCommand = new Gson().fromJson(msg, JoinPlayerCommand.class);
+//            String authToken = joinCommand.getAuthString();
+//            Integer gameID = joinCommand.getGameID();
+//            ChessGame.TeamColor playerColor = joinCommand.getPlayerColor();
+//            connections.add(joinCommand.getGameID(), authToken, conn.session);
+//
+//            //Game DAO call, get the game, see if the usernames are the same
+//            GameData gameToJoin = myGameDAO.getGame(gameID);
+//            String joinCommandUsername = myAuthDAO.getAuth(authToken).username();
+//            String httpWhiteUsername = gameToJoin.whiteUsername();
+//            String httpBlackUsername = gameToJoin.blackUsername();
+//            //if requesting black, joincommandUsername should match httpBlackUsername
+//            //if requesting white, joincommand username should match http WhiteUsername
+//            if (playerColor == ChessGame.TeamColor.WHITE) {
+//                if (!Objects.equals(joinCommandUsername, gameToJoin.whiteUsername())) {
+//                    ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "wrong color selected");
+//                    connections.rootusersend(authToken, gameID, errorMessage);
+//                    return false;
+//                }
+//            } else if (playerColor == ChessGame.TeamColor.BLACK) {
+//                if (!Objects.equals(joinCommandUsername, gameToJoin.blackUsername())) {
+//                    ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "wrong color selected");
+//                    connections.rootusersend(authToken, gameID, errorMessage);
+//                    return true;
+//                }
+//            }
+//        } catch(IOException e){
+//            System.out.println("Something went wrong in websocket handler join: " + e);
+//        }
+//    }
     private void observe(Connection conn, String msg){
-
     }
 
 
