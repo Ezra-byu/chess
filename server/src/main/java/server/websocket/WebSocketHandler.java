@@ -68,13 +68,15 @@ public class WebSocketHandler {
             //if requesting white, joincommand username should match http WhiteUsername
             if(playerColor == ChessGame.TeamColor.WHITE){
                 if(!Objects.equals(joinCommandUsername, gameToJoin.whiteUsername())){
-                    ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "wrong color selected");
+                    ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: wrong color selected");
                     connections.rootusersend(authToken, gameID, errorMessage);
+                    return;
                 }
             } else if(playerColor == ChessGame.TeamColor.BLACK){
                 if(!Objects.equals(joinCommandUsername, gameToJoin.blackUsername())){
-                    ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "wrong color selected");
+                    ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: wrong color selected");
                     connections.rootusersend(authToken, gameID, errorMessage);
+                    return;
                 }
             }
             LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, myGameDAO.getGame(joinCommand.getGameID()));
