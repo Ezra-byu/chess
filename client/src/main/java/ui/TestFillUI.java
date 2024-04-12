@@ -8,7 +8,6 @@ import chess.ChessPosition;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.Random;
 
 import static chess.ChessPiece.PieceType.*;
 import static ui.EscapeSequences.*;
@@ -21,7 +20,7 @@ public class TestFillUI {
         private static ChessBoard testboard;
         private static String orientation;
 
-        public static void main(String[] args) {
+        public static void main() {
             testboard = new ChessBoard();
             //remove after debugging:
             testboard.resetBoard();
@@ -200,12 +199,12 @@ public class TestFillUI {
         }
         private static void printStandardPlayer(PrintStream out, int boardRow, int boardCol, String background) {
             String piece = "";
-            String PIECE_COLOR = "black";
+            String pieceColor = "black";
 //        for (int i = 0; i < BOARD_SIZE_IN_SQUARES; ++i){
 //            for (int j = 0; j < BOARD_SIZE_IN_SQUARES; ++j)
 //                if(boardRow == i && boardCol == j){
 //                    piece = WHITE_ROOK;
-//                    PIECE_COLOR =
+//                    pieceColor =
 //                }
             //This file runs on 0-7 index. ChessBoard expects 1-8
             ChessPosition piecePosition = new ChessPosition(boardRow+1, boardCol+1);

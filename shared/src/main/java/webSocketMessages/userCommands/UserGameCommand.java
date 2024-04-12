@@ -20,9 +20,6 @@ public class UserGameCommand {
         MAKE_MOVE,
         LEAVE,
         RESIGN;
-
-        public class JOIN_PLAYER {
-        }
     }
 
     protected CommandType commandType;

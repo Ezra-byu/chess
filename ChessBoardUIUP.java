@@ -188,140 +188,140 @@ public class ChessBoardUIUP {
     }
     private static void printStandardPlayer(PrintStream out, int boardRow, int boardCol, String background) {
         String piece = "";
-        String PIECE_COLOR = "black";
+        String pieceColor = "black";
 //        for (int i = 0; i < BOARD_SIZE_IN_SQUARES; ++i){
 //            for (int j = 0; j < BOARD_SIZE_IN_SQUARES; ++j)
 //                if(boardRow == i && boardCol == j){
 //                    piece = WHITE_ROOK;
-//                    PIECE_COLOR =
+//                    pieceColor =
 //                }
         if(boardRow == 0 && boardCol == 0) {
             piece = BLACK_ROOK;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 0 && boardCol == 1) {
             piece = BLACK_KNIGHT;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 0 && boardCol == 2) {
             piece = BLACK_BISHOP;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 0 && boardCol == 3) {
             piece = BLACK_QUEEN;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 0 && boardCol == 4) {
             piece = BLACK_KING;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 0 && boardCol == 5) {
             piece = BLACK_BISHOP;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 0 && boardCol == 6) {
             piece = BLACK_KNIGHT;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 0 && boardCol == 7) {
             piece = BLACK_ROOK;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 1 && boardCol == 0) {
             piece = BLACK_PAWN;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 1 && boardCol == 1) {
             piece = BLACK_PAWN;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 1 && boardCol == 2) {
             piece = BLACK_PAWN;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 1 && boardCol == 3) {
             piece = BLACK_PAWN;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 1 && boardCol == 4) {
             piece = BLACK_PAWN;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 1 && boardCol == 5) {
             piece = BLACK_PAWN;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 1 && boardCol == 6) {
             piece = BLACK_PAWN;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 1 && boardCol == 7) {
             piece = BLACK_PAWN;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 6 && boardCol == 0) {
             piece = WHITE_PAWN;
-            PIECE_COLOR = "white";
+            pieceColor = "white";
         }
         else if(boardRow == 6 && boardCol == 1) {
             piece = WHITE_PAWN;
-            PIECE_COLOR = "white";
+            pieceColor = "white";
         }
         else if(boardRow == 6 && boardCol == 2) {
             piece = WHITE_PAWN;
-            PIECE_COLOR = "white";
+            pieceColor = "white";
         }
         else if(boardRow == 6 && boardCol == 3) {
             piece = WHITE_PAWN;
-            PIECE_COLOR = "white";
+            pieceColor = "white";
         }
         else if(boardRow == 6 && boardCol == 4) {
             piece = WHITE_PAWN;
-            PIECE_COLOR = "white";
+            pieceColor = "white";
         }
         else if(boardRow == 6 && boardCol == 5) {
             piece = WHITE_PAWN;
-            PIECE_COLOR = "white";
+            pieceColor = "white";
         }
         else if(boardRow == 6 && boardCol == 6) {
             piece = WHITE_PAWN;
-            PIECE_COLOR = "white";
+            pieceColor = "white";
         }
         else if(boardRow == 6 && boardCol == 7) {
             piece = WHITE_PAWN;
-            PIECE_COLOR = "white";
+            pieceColor = "white";
         }
         else if(boardRow == 7 && boardCol == 0) {
             piece = WHITE_ROOK;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 7 && boardCol == 1) {
             piece = WHITE_KNIGHT;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 7 && boardCol == 2) {
             piece = WHITE_BISHOP;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 7 && boardCol == 3) {
             piece = WHITE_QUEEN;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 7 && boardCol == 4) {
             piece = WHITE_KING;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 7 && boardCol == 5) {
             piece = WHITE_BISHOP;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 7 && boardCol == 6) {
             piece = WHITE_KNIGHT;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else if(boardRow == 7 && boardCol == 7) {
             piece = WHITE_ROOK;
-            PIECE_COLOR = "black";
+            pieceColor = "black";
         }
         else{piece = EMPTY;}
 

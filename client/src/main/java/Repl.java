@@ -6,13 +6,12 @@ import model.GameData;
 import model.JoinGameRequest;
 import model.UserData;
 import serverFacade.ServerFacade;
-import ui.ChessBoardUIDOWN;
-import ui.ChessBoardUIUP;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
-import chess.*;
+
+import ui.TestFillUI;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -138,11 +137,11 @@ public class Repl {
             }
             try {
                 String gameName = params[0];
-                GameData GameObject = new GameData(0, null, null, gameName, null);
+                GameData gameObject = new GameData(0, null, null, gameName, null);
 
                 //System.out.print("game " + gameName + " created ");
                 //hashmap
-                var createdGame = serverFacade.createGame(GameObject, sessionAuth.authToken());
+                var createdGame = serverFacade.createGame(gameObject, sessionAuth.authToken());
 //                sessionGame += 1;
 //                sessionGames.put(sessionGame, createdGame);
 
@@ -185,8 +184,8 @@ public class Repl {
             try {
                 String color = params[0];
                 Integer gameNum = Integer.parseInt(params[1]);
-                GameData SelectedGameData = sessionGames.get(gameNum);
-                var createdGameRequest = new JoinGameRequest(color.toUpperCase(), SelectedGameData.gameID());
+                GameData selectedGameData = sessionGames.get(gameNum);
+                var createdGameRequest = new JoinGameRequest(color.toUpperCase(), selectedGameData.gameID());
                 //Call the server join API to join them to the game (or verify the game exists if they are observing).
                 serverFacade.joinGame(createdGameRequest, sessionAuth.authToken());
 
@@ -196,7 +195,7 @@ public class Repl {
                 //Open a WebSocket connection with the server (using the /connect endpoint) so it can send and receive gameplay messages.
 
 
-                return ("game " + gameNum + " " + SelectedGameData.gameName() + " joined");
+                return ("game " + gameNum + " " + selectedGameData.gameName() + " joined");
             } catch (ResponseException e) {
                 return (e.toString());
             }
@@ -215,8 +214,7 @@ public class Repl {
                 GameData SelectedGameData = sessionGames.get(gameNum);
                 var createdGameRequest = new JoinGameRequest(null, SelectedGameData.gameID());
                 serverFacade.joinGame(createdGameRequest, sessionAuth.authToken());
-                ChessBoardUIUP.main();
-                ChessBoardUIDOWN.main();
+                TestFillUI.main();// put in ChessBoardUIDOWN.main();
                 return ("observing game " + gameNum);
             } catch (ResponseException e) {
                 return (e.toString());

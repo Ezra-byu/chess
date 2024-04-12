@@ -133,14 +133,14 @@ public class MySqlGameDAO implements GameDAO{
     }
 
     private GameData readGameData(ResultSet rs) throws SQLException {
-        //GameID, whiteUsername, blackUsername, gameName, chess
-        var GameID = rs.getInt("GameID");
+        //gameID, whiteUsername, blackUsername, gameName, chess
+        var gameID = rs.getInt("gameID");
         var whiteUsername = rs.getString("whiteUsername");
         var blackUsername = rs.getString("blackUsername");
         var gameName = rs.getString("gameName");
         var jsonGame = rs.getString("chess");
         var game = new Gson().fromJson(jsonGame, ChessGame.class);
-        return new GameData(GameID, whiteUsername, blackUsername, gameName, game);
+        return new GameData(gameID, whiteUsername, blackUsername, gameName, game);
     }
     private int executeUpdate(String statement, Object... params) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {

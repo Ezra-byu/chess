@@ -1,8 +1,8 @@
 public class PreLoginMenu{
     private final String serverUrl;
 
-    public PreLoginMenu(String ServerUrl) {
-        this.serverUrl = ServerUrl;
+    public PreLoginMenu(String serverUrl) {
+        this.serverUrl = serverUrl;
     }
 
 
