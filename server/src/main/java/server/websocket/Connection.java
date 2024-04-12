@@ -21,16 +21,14 @@ public class Connection {
     public void send(String msg) throws IOException {
         session.getRemote().sendString(new Gson().toJson(msg)); //Converts msg to json
     }
-//    public static void sendError(String msg) throws IOException{
-//        session.getRemote().sendString(msg);
-//    }
+//    public static void sendError(String msg) throws IOException{ session.getRemote().sendString(msg);}
 
-//    @Override
-//    public String toString() {
-//        return "Connection{" +
-//                "gameID=" + gameID +
-//                ", authToken='" + authToken + '\'' +
-//                ", session=" + session +
-//                '}';
-//    }
+    @Override
+    public String toString() {
+        return "Connection{" +
+                "gameID=" + gameID +
+                ", authToken='" + authToken + '\'' +
+                ", session=" + session +
+                '}';
+    }
 }

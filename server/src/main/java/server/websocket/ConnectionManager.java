@@ -64,10 +64,6 @@ public class ConnectionManager { //organizes session objects
             connections.remove(c.authToken);
         }
     }
-//    public Connection getConnection(Integer gameID, String authToken, Session session) {
-//        //return connections.get(authToken);
-//        return new Connection(gameID, authToken, session);
-//    }
 
     public Connection getConnection(String authToken, Session session) {
         return new Connection(null, authToken, session);

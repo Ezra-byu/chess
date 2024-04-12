@@ -40,9 +40,7 @@ public class TestFillUI {
         private static void drawHeaders(PrintStream out) {
 
             setDarkGray(out);
-            //if(orientation == down){
-            //String[] headers = { " h ", " g ", " f ", " e ", " d ", " c ", " b ", " a " };
-            //else{
+            //if(orientation == down) { " h ", " g ", " f ", " e ", " d ", " c ", " b ", " a " }
             String[] headers = { " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h " };
             for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
                 drawHeader(out, headers[boardCol]);
@@ -200,12 +198,7 @@ public class TestFillUI {
         private static void printStandardPlayer(PrintStream out, int boardRow, int boardCol, String background) {
             String piece = "";
             String pieceColor = "black";
-//        for (int i = 0; i < BOARD_SIZE_IN_SQUARES; ++i){
-//            for (int j = 0; j < BOARD_SIZE_IN_SQUARES; ++j)
-//                if(boardRow == i && boardCol == j){
-//                    piece = WHITE_ROOK;
-//                    pieceColor =
-//                }
+//        for (int i = 0; i < BOARD_SIZE_IN_SQUARES; ++i){ for (int j = 0; j < BOARD_SIZE_IN_SQUARES; ++j) if(boardRow == i && boardCol == j){ piece = WHITE_ROOK; pieceColor =}
             //This file runs on 0-7 index. ChessBoard expects 1-8
             ChessPosition piecePosition = new ChessPosition(boardRow+1, boardCol+1);
             ChessPiece pieceToPlace = testboard.getPiece(piecePosition);

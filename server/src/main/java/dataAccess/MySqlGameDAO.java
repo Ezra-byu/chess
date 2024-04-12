@@ -28,11 +28,6 @@ public class MySqlGameDAO implements GameDAO{
 
     @Override
     public GameData createGame(GameData game) {
-        //Insert into gameID (auto incremented)
-        //Insert into whiteusername, black username, gamename,
-        //serializeGame(game)
-        //Insert serialized game
-        //insert into user values ("abe", "lincoln", "abe@link")
         try {
             var statement = "INSERT INTO game (GameID, whiteUsername, blackUsername, gameName, chess) VALUES (?, ?, ?, ?, ?)";
             var jsonGame = serializeGame(game.game());

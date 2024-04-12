@@ -46,38 +46,16 @@ public class ServerFacade {
         Collection<GameData> gameList;
         var response = this.makeRequest("GET", path, null, ListGameResponse.class, authToken);
         return response.getGames().toArray(new GameData[0]);
-//        try {
-//            var path = "/game";
-//            record listPetResponse(GameData[] gameRecord) {
-//            }
-//            var response = this.makeRequest("GET", path, null, listPetResponse.class);
-//            return response.gameRecord();
-//        } catch (Exception e) {
-//            System.out.println("500" + "Something went wrong." + e);
-//        }
-//        return null;
+
     }
     public GameData createGame(GameData game, String authToken) throws ResponseException{
         var path = "/game";
         return this.makeRequest("POST", path, game, GameData.class, authToken);
-//        try {
-//            var path = "/game";
-//            return this.makeRequest("POST", path, game, GameData.class);
-//        } catch (Exception e) {
-//            System.out.println("500" + "Something went wrong." + e);
-//        }
-//        return null;
     }
 
     public void joinGame(JoinGameRequest gameRequest, String authToken) throws ResponseException{
         var path = "/game";
         this.makeRequest("PUT", path, gameRequest, GameData.class, authToken);
-//        try {
-//            var path = "/game";
-//            this.makeRequest("PUT", path, gameRequest, GameData.class);
-//        } catch (Exception e) {
-//            System.out.println("500" + "Something went wrong." + e);
-//        }
     }
 
 

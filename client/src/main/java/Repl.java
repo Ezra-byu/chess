@@ -29,10 +29,7 @@ public class Repl {
         serverFacade = new ServerFacade(serverUrl);
         sessionGameInt = 0;
         state = State.SIGNEDOUT;
-//        this.preLogin = preLogin;
-//        this.postLogin = postLogin;
-//        postLogin = new PostLoginMenu(serverUrl);
-//        preLogin = new PreLoginMenu(serverUrl);
+
     }
 
     public void run() {

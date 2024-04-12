@@ -39,9 +39,7 @@ public class WebSocketFacade extends Endpoint {
                     NotificationMessage notification = new Gson().fromJson(message, NotificationMessage.class);
                     notificationHandler.notify(notification);
                 }
-//                public void onMessage(String message) {
-//                    System.out.println(message);
-//                }
+//                public void onMessage(String message) { System.out.println(message); }
             });
         } catch (DeploymentException | IOException | URISyntaxException ex) {
             throw new ResponseException(500, ex.getMessage());
@@ -53,24 +51,6 @@ public class WebSocketFacade extends Endpoint {
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
 
-//    public void enterPetShop(String visitorName) throws ResponseException {
-//        try {
-//            var action = new Action(Action.Type.ENTER, visitorName);
-//            this.session.getBasicRemote().sendText(new Gson().toJson(action));
-//        } catch (IOException ex) {
-//            throw new ResponseException(500, ex.getMessage());
-//        }
-//    }
-
-//    public void leavePetShop(String visitorName) throws ResponseException {
-//        try {
-//            var action = new Action(Action.Type.EXIT, visitorName);
-//            this.session.getBasicRemote().sendText(new Gson().toJson(action));
-//            this.session.close();
-//        } catch (IOException ex) {
-//            throw new ResponseException(500, ex.getMessage());
-//        }
-//    }
 
 }
 
