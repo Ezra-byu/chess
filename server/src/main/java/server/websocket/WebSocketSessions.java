@@ -11,9 +11,9 @@ public class WebSocketSessions {
     public final ConcurrentHashMap<Integer, HashMap<String, Session>> connections = new ConcurrentHashMap<Integer, HashMap<String, Session>>();
     public final Map<String, Session> innerMap = new HashMap<String, Session>();
 
-    public void addSessionToGame(Integer AuthToken, Session session) {
-        //var connection = new Connection(AuthToken, session);
-        //connections.put(AuthToken, connection);
+    public void addSessionToGame(Integer authToken, Session session) {
+        //var connection = new Connection(authToken, session);
+        //connections.put(authToken, connection);
     }
     public void removeSessionFromGame(String visitorName) {
         connections.remove(visitorName);
