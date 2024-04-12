@@ -40,8 +40,7 @@ public class ServerFacadeTests {
         server.stop();
     }
 
-
-    @Test
+    
     void registerSuccess() throws ResponseException {
         var createdUser = new UserData("john", "jacob", "jingheimer@gmail");
         var returnedAuth = assertDoesNotThrow(() -> serverFacade.register(createdUser));

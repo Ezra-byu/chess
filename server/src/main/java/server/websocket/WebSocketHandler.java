@@ -1,9 +1,10 @@
 package server.websocket;
 
 import com.google.gson.Gson;
-import dataAccess.DataAccessException;
 import dataAccess.GameDAO;
 import dataAccess.MySqlGameDAO;
+import dataAccess.MySqlUserDAO;
+import dataAccess.UserDAO;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -21,6 +22,7 @@ import java.io.IOException;
 @WebSocket
 public class WebSocketHandler {
     private GameDAO myGameDAO = new MySqlGameDAO();
+    private UserDAO myUserDAO = new MySqlUserDAO();
 
     private final ConnectionManager connections = new ConnectionManager();
     //@OnWebSocketConnect
@@ -58,15 +60,18 @@ public class WebSocketHandler {
     private void join(Connection conn, String msg){
         try {
             JoinPlayerCommand joinCommand = new Gson().fromJson(msg, JoinPlayerCommand.class);
-            String authToken = conn.AuthToken;
+            String authToken = conn.authToken;
+            Integer gameID = conn.gameID;
             connections.add(joinCommand.getGameID(), authToken, conn.session);
             //Game DAO call
             LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, myGameDAO.getGame(joinCommand.getGameID()));
             //Server sends a LOAD_GAME message back to the root client.
+            connections.rootusersend(authToken, gameID, loadGameMessage);
             //Server sends a Notification message to all other clients in that game informing them what color the root client is joining as.
-            var message = String.format("message here");
+            var message = String.format("so and so has joined the game");
             var notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
-            connections.broadcast(authToken, notification);
+            //connections.rootusersend(authToken, loadGameMessage);
+            connections.broadcast(authToken, gameID, notification);
         }
         catch (IOException e){
             System.out.println("Something went wrong in websocket handler join." + e);
@@ -74,10 +79,4 @@ public class WebSocketHandler {
 
     }
 
-//    private void exit(String visitorName) throws IOException {
-//        connections.remove(visitorName);
-//        var message = String.format("%s left the shop", visitorName);
-//        var notification = new Notification(Notification.Type.DEPARTURE, message);
-//        connections.broadcast(visitorName, notification);
-//    }
 }
