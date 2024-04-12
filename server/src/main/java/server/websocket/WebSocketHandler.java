@@ -13,6 +13,7 @@ import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.NotificationMessage;
 import webSocketMessages.serverMessages.ServerMessage;
+import webSocketMessages.userCommands.JoinObserverCommand;
 import webSocketMessages.userCommands.JoinPlayerCommand;
 import webSocketMessages.userCommands.UserGameCommand;
 
@@ -72,9 +73,8 @@ public class WebSocketHandler {
                 connections.rootusersend(authToken, gameID, errorMessage);
                 return;
             }
+
             String joinCommandUsername = myAuthDAO.getAuth(authToken).username();
-            String httpWhiteUsername = gameToJoin.whiteUsername();
-            String httpBlackUsername = gameToJoin.blackUsername();
             //if requesting black, joincommandUsername should match httpBlackUsername
             //if requesting white, joincommand username should match http WhiteUsername
             if(playerColor == ChessGame.TeamColor.WHITE){
@@ -94,7 +94,7 @@ public class WebSocketHandler {
             //Server sends a LOAD_GAME message back to the root client.
             connections.rootusersend(authToken, gameID, loadGameMessage);
             //Server sends a Notification message to all other clients in that game informing them what color the root client is joining as.
-            var message = String.format("so and so has joined the game");
+            var message = String.format("Joined game: " + joinCommandUsername);
             var notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
             //connections.rootusersend(authToken, loadGameMessage);
             connections.broadcast(authToken, gameID, notification);
@@ -104,40 +104,35 @@ public class WebSocketHandler {
         }
 
     }
-
-//    Boolean joinVerification(Connection conn, String msg){
-//        try {
-//            JoinPlayerCommand joinCommand = new Gson().fromJson(msg, JoinPlayerCommand.class);
-//            String authToken = joinCommand.getAuthString();
-//            Integer gameID = joinCommand.getGameID();
-//            ChessGame.TeamColor playerColor = joinCommand.getPlayerColor();
-//            connections.add(joinCommand.getGameID(), authToken, conn.session);
-//
-//            //Game DAO call, get the game, see if the usernames are the same
-//            GameData gameToJoin = myGameDAO.getGame(gameID);
-//            String joinCommandUsername = myAuthDAO.getAuth(authToken).username();
-//            String httpWhiteUsername = gameToJoin.whiteUsername();
-//            String httpBlackUsername = gameToJoin.blackUsername();
-//            //if requesting black, joincommandUsername should match httpBlackUsername
-//            //if requesting white, joincommand username should match http WhiteUsername
-//            if (playerColor == ChessGame.TeamColor.WHITE) {
-//                if (!Objects.equals(joinCommandUsername, gameToJoin.whiteUsername())) {
-//                    ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "wrong color selected");
-//                    connections.rootusersend(authToken, gameID, errorMessage);
-//                    return false;
-//                }
-//            } else if (playerColor == ChessGame.TeamColor.BLACK) {
-//                if (!Objects.equals(joinCommandUsername, gameToJoin.blackUsername())) {
-//                    ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "wrong color selected");
-//                    connections.rootusersend(authToken, gameID, errorMessage);
-//                    return true;
-//                }
-//            }
-//        } catch(IOException e){
-//            System.out.println("Something went wrong in websocket handler join: " + e);
-//        }
-//    }
     private void observe(Connection conn, String msg){
+        try {
+            JoinObserverCommand observeCommand = new Gson().fromJson(msg, JoinObserverCommand.class);
+            String authToken = observeCommand.getAuthString();
+            Integer gameID = observeCommand.getGameID();
+            connections.add(gameID, authToken, conn.session);
+
+            GameData gameToJoin = myGameDAO.getGame(gameID);
+            if (gameToJoin == null){
+                ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: no game exists");
+                connections.rootusersend(authToken, gameID, errorMessage);
+                return;
+            }
+
+            String observeCommandUsername = myAuthDAO.getAuth(authToken).username();
+
+            LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, myGameDAO.getGame(observeCommand.getGameID()));
+            //Server sends a LOAD_GAME message back to the root client.
+            connections.rootusersend(authToken, gameID, loadGameMessage);
+
+
+            var message = String.format("joinied game:  " + observeCommandUsername);
+            var notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
+            connections.broadcast(authToken, gameID, notification);
+
+
+        } catch (IOException e){
+            System.out.println("Something went wrong in websocket handler observe: " + e);
+        }
     }
 
 
