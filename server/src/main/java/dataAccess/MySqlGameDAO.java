@@ -36,12 +36,11 @@ public class MySqlGameDAO implements GameDAO{
         try {
             var statement = "INSERT INTO game (GameID, whiteUsername, blackUsername, gameName, chess) VALUES (?, ?, ?, ?, ?)";
             var jsonGame = serializeGame(game.game());
-            var GameID = nextId++;
-            executeUpdate(statement, GameID, game.whiteUsername(), game.blackUsername(), game.gameName(), jsonGame);
+            var gameID = nextId++;//made lowercase for phase 6 style checker
+            executeUpdate(statement, gameID, game.whiteUsername(), game.blackUsername(), game.gameName(), jsonGame);
             //added for phase 5 debug
-            System.out.println("Database Game ID " + GameID + " " + game.gameName() + " Database game.whiteUsername " + game.whiteUsername());
 
-            return new GameData(GameID, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
+            return new GameData(gameID, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
 
         }
         catch (DataAccessException e){

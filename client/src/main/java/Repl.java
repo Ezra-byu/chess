@@ -211,8 +211,8 @@ public class Repl {
             }
             try {
                 Integer gameNum = Integer.parseInt(params[0]);
-                GameData SelectedGameData = sessionGames.get(gameNum);
-                var createdGameRequest = new JoinGameRequest(null, SelectedGameData.gameID());
+                GameData selectedGameData = sessionGames.get(gameNum);
+                var createdGameRequest = new JoinGameRequest(null, selectedGameData.gameID());
                 serverFacade.joinGame(createdGameRequest, sessionAuth.authToken());
                 TestFillUI.main();// put in ChessBoardUIDOWN.main();
                 return ("observing game " + gameNum);

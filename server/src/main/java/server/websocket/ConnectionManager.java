@@ -44,13 +44,13 @@ public class ConnectionManager { //organizes session objects
         }
     }
 
-    public void rootusersend(String visitorName, Integer GameID, ServerMessage notification) throws IOException {
+    public void rootusersend(String visitorName, Integer gameID, ServerMessage notification) throws IOException {
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
                 if (c.authToken.equals(visitorName)) {
-                    //make sure same game c.gameID.equals(GameID)
-                    if (c.gameID.equals(GameID)) {
+                    //make sure same game c.gameID.equals(gameID)
+                    if (c.gameID.equals(gameID)) {
                         c.send(notification.toString());
                         System.out.print(c.toString());
                     }
