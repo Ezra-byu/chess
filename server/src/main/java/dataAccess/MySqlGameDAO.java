@@ -28,14 +28,20 @@ public class MySqlGameDAO implements GameDAO{
 
     @Override
     public GameData createGame(GameData game) {
+        //Insert into gameID (auto incremented)
+        //Insert into whiteusername, black username, gamename,
+        //serializeGame(game)
+        //Insert serialized game
+        //insert into user values ("abe", "lincoln", "abe@link")
         try {
             var statement = "INSERT INTO game (GameID, whiteUsername, blackUsername, gameName, chess) VALUES (?, ?, ?, ?, ?)";
             var jsonGame = serializeGame(game.game());
-            var gameID = nextId++;//made lowercase for phase 6 style checker
-            executeUpdate(statement, gameID, game.whiteUsername(), game.blackUsername(), game.gameName(), jsonGame);
+            var GameID = nextId++;
+            executeUpdate(statement, GameID, game.whiteUsername(), game.blackUsername(), game.gameName(), jsonGame);
             //added for phase 5 debug
+            System.out.println("SqlGameDAO: Database Game ID " + GameID + " " + game.gameName() + " Database game.whiteUsername " + game.whiteUsername());
 
-            return new GameData(gameID, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
+            return new GameData(GameID, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
 
         }
         catch (DataAccessException e){
@@ -103,7 +109,7 @@ public class MySqlGameDAO implements GameDAO{
                 ps.setInt(4, game.gameID());
                 ps.executeUpdate();
                 //added for phase 5 debug
-                System.out.println("Database gameName " + game.gameName() + " Database white username " + game.whiteUsername()+ " Database black username: " + game.whiteUsername());
+                System.out.println("SQLGameDAO: update game: Database gameName " + game.gameName() + " Database white username " + game.whiteUsername()+ " Database black username: " + game.whiteUsername());
 
                 return game;
             }
@@ -127,14 +133,14 @@ public class MySqlGameDAO implements GameDAO{
     }
 
     private GameData readGameData(ResultSet rs) throws SQLException {
-        //gameID, whiteUsername, blackUsername, gameName, chess
-        var gameID = rs.getInt("gameID");
+        //GameID, whiteUsername, blackUsername, gameName, chess
+        var GameID = rs.getInt("GameID");
         var whiteUsername = rs.getString("whiteUsername");
         var blackUsername = rs.getString("blackUsername");
         var gameName = rs.getString("gameName");
         var jsonGame = rs.getString("chess");
         var game = new Gson().fromJson(jsonGame, ChessGame.class);
-        return new GameData(gameID, whiteUsername, blackUsername, gameName, game);
+        return new GameData(GameID, whiteUsername, blackUsername, gameName, game);
     }
     private int executeUpdate(String statement, Object... params) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
@@ -167,7 +173,7 @@ public class MySqlGameDAO implements GameDAO{
               `whiteUsername` varchar(256) DEFAULT NULL,
               `blackUsername` varchar(256) DEFAULT NULL,
               `gameName` varchar(256) NOT NULL,
-              `chess` TEXT DEFAULT NULL,s
+              `chess` TEXT DEFAULT NULL,
               PRIMARY KEY (`GameID`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """
@@ -176,7 +182,9 @@ public class MySqlGameDAO implements GameDAO{
     private String serializeGame(ChessGame game) {
         return new Gson().toJson(game);
     }
-    //private ChessGame deSerializeGame(String jsonGame) {return new Gson().fromJson(jsonGame, ChessGame.class);}
+    private ChessGame deSerializeGame(String jsonGame) {
+        return new Gson().fromJson(jsonGame, ChessGame.class);
+    }
 
     private void configureDatabase() throws DataAccessException {
         DatabaseManager.createDatabase();

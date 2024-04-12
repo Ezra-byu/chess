@@ -32,12 +32,16 @@ public class WebSocketHandler {
     public void onMessage(Session session, String msg) throws Exception {
         //GameCommand command = readJson(msg, UserGameCommand.class);
         UserGameCommand command = new Gson().fromJson(msg, UserGameCommand.class);
+        //make sure that the authToken and session are not null(does not test GameID)
         var conn = connections.getConnection(command.getAuthString(), session);
         //var conn = connections(command.authToken, session);
         if (conn != null) {
             switch (command.getCommandType()) {
                 case JOIN_PLAYER -> join(conn, msg);
-                //case JOIN_OBSERVER -> observe(conn, msg); case MAKE_MOVE -> move(conn, msg)); case LEAVE -> leave(conn, msg); case RESIGN -> resign(conn, msg);
+                case JOIN_OBSERVER -> observe(conn, msg);
+                //case MAKE_MOVE -> move(conn, msg));
+                //case LEAVE -> leave(conn, msg);
+                //case RESIGN -> resign(conn, msg);
             }
         } else {
             //Connection.sendError(session.getRemote(), "unknown user");
@@ -48,8 +52,8 @@ public class WebSocketHandler {
     private void join(Connection conn, String msg){
         try {
             JoinPlayerCommand joinCommand = new Gson().fromJson(msg, JoinPlayerCommand.class);
-            String authToken = conn.authToken;
-            Integer gameID = conn.gameID;
+            String authToken = joinCommand.getAuthString();
+            Integer gameID = joinCommand.getGameID();
             connections.add(joinCommand.getGameID(), authToken, conn.session);
             //Game DAO call
             LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, myGameDAO.getGame(joinCommand.getGameID()));
@@ -64,6 +68,10 @@ public class WebSocketHandler {
         catch (IOException e){
             System.out.println("Something went wrong in websocket handler join." + e);
         }
+
+    }
+
+    private void observe(Connection conn, String msg){
 
     }
 

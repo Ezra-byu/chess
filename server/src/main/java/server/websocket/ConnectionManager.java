@@ -31,6 +31,7 @@ public class ConnectionManager { //organizes session objects
                 if (!c.authToken.equals(visitorName)) {
                     //make sure same game c.gameID.equals(gameID)
                     if (c.gameID.equals(gameID)) {
+                        System.out.print("broadcast: " + c);
                         c.send(notification.toString());
                     }
                 }
@@ -51,8 +52,8 @@ public class ConnectionManager { //organizes session objects
                 if (c.authToken.equals(visitorName)) {
                     //make sure same game c.gameID.equals(gameID)
                     if (c.gameID.equals(gameID)) {
+                        System.out.print("root user: " + notification);
                         c.send(notification.toString());
-                        System.out.print(c.toString());
                     }
                 }
             } else {
