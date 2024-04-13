@@ -1,5 +1,6 @@
 package dataAccess;
 
+import chess.ChessBoard;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import exception.ResponseException;
@@ -28,14 +29,15 @@ public class MySqlGameDAO implements GameDAO{
 
     @Override
     public GameData createGame(GameData game) {
-        //Insert into gameID (auto incremented)
-        //Insert into whiteusername, black username, gamename,
-        //serializeGame(game)
-        //Insert serialized game
-        //insert into user values ("abe", "lincoln", "abe@link")
+        ChessGame startedGame = new ChessGame();
+        ChessBoard newBoard = new ChessBoard();
+        newBoard.resetBoard();
+        startedGame.setTeamTurn(ChessGame.TeamColor.WHITE);
+        startedGame.setBoard(newBoard);
+
         try {
             var statement = "INSERT INTO game (GameID, whiteUsername, blackUsername, gameName, chess) VALUES (?, ?, ?, ?, ?)";
-            var jsonGame = serializeGame(game.game());
+            var jsonGame = serializeGame(startedGame);
             var GameID = nextId++;
             executeUpdate(statement, GameID, game.whiteUsername(), game.blackUsername(), game.gameName(), jsonGame);
             //added for phase 5 debug

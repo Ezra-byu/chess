@@ -3,6 +3,7 @@ package server.websocket;
 import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessMove;
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataAccess.*;
 import model.GameData;
@@ -150,9 +151,18 @@ public class WebSocketHandler {
             Integer gameID = makeMoveCommand.getGameID();
             ChessMove move = makeMoveCommand.getMove();
             GameData game = myGameDAO.getGame(gameID);
+            ChessGame myGame = game.game();
 
             //Server verifies the validity of the move.
+
             //Game is updated to represent the move. Game is updated in the database.
+            try {
+                myGame.makeMove(move);
+            } catch (InvalidMoveException e) {
+                ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Bad move");
+                connections.rootusersend(authToken, gameID, errorMessage);
+                return;
+            }
 
 
             LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, myGameDAO.getGame(makeMoveCommand.getGameID()));
