@@ -12,6 +12,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 //import webSocketMessages.Action;
 //import webSocketMessages.Notification;
+import server.websocket.ui.TestFillUI;
 import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.NotificationMessage;
@@ -155,6 +156,19 @@ public class WebSocketHandler {
             String userName = myAuthDAO.getAuth(authToken).username();
             var currentTurn = myGame.getTeamTurn();
 
+            ChessBoard myBoard = game.game().getBoard();
+            System.out.println(myBoard.toString2());
+
+            var tsrue = myGame.isInCheckmate(ChessGame.TeamColor.WHITE);
+            var car = myGame.isInCheckmate(ChessGame.TeamColor.BLACK);
+            Boolean whiteStale = myGame.isInStalemate(ChessGame.TeamColor.WHITE);
+            Boolean blackStale =  myGame.isInCheckmate(ChessGame.TeamColor.BLACK);
+            if(myGame.isInCheck(ChessGame.TeamColor.WHITE) || myGame.isInCheck(ChessGame.TeamColor.BLACK)){
+                ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: In check");
+                connections.rootusersend(authToken, gameID, errorMessage);
+                return;
+            }
+
             if(currentTurn == ChessGame.TeamColor.WHITE){
                 if (!Objects.equals(userName, game.whiteUsername())){
                     ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Bad move");
@@ -169,6 +183,7 @@ public class WebSocketHandler {
                     return;
                 }
             }
+
             //Server verifies the validity of the move.
             //Game is updated to represent the move. Game is updated in the database.
             try {
@@ -178,7 +193,6 @@ public class WebSocketHandler {
                 connections.rootusersend(authToken, gameID, errorMessage);
                 return;
             }
-
 
 
 

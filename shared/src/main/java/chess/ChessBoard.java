@@ -145,6 +145,25 @@ public class ChessBoard {
                 '}';
     }
 
+    public String toString2() {
+        String rows = "ABCDEFGH";
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("\n");
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++){
+                stringBuilder.append(rows.charAt(i));
+                stringBuilder.append(j+1);
+                stringBuilder.append(": ");
+                if (squares[i][j] != null){
+                    stringBuilder.append(squares[i][j].toString());
+                }
+                stringBuilder.append(", ");
+            }
+            stringBuilder.append("\n");
+        }
+        return stringBuilder.toString();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
