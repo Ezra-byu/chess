@@ -26,7 +26,7 @@ public class ConnectionManager { //organizes session objects
 
     //public void broadcast(String excludeVisitorName, Notification notification) throws IOException {
     //notification = ServerMessage
-    public void broadcast(String visitorName, Integer gameID, NotificationMessage notification) throws IOException {
+    public void broadcast(String visitorName, Integer gameID, ServerMessage notification) throws IOException {
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {
             if (c.session.isOpen()) {

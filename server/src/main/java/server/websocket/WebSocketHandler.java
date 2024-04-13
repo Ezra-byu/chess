@@ -1,6 +1,8 @@
 package server.websocket;
 
+import chess.ChessBoard;
 import chess.ChessGame;
+import chess.ChessMove;
 import com.google.gson.Gson;
 import dataAccess.*;
 import model.GameData;
@@ -15,6 +17,7 @@ import webSocketMessages.serverMessages.NotificationMessage;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.JoinObserverCommand;
 import webSocketMessages.userCommands.JoinPlayerCommand;
+import webSocketMessages.userCommands.MakeMoveCommand;
 import webSocketMessages.userCommands.UserGameCommand;
 
 import java.io.IOException;
@@ -42,7 +45,7 @@ public class WebSocketHandler {
             switch (command.getCommandType()) {
                 case JOIN_PLAYER -> join(conn, msg);
                 case JOIN_OBSERVER -> observe(conn, msg);
-                //case MAKE_MOVE -> move(conn, msg));
+                case MAKE_MOVE -> move(conn, msg);
                 //case LEAVE -> leave(conn, msg);
                 //case RESIGN -> resign(conn, msg);
             }
@@ -131,6 +134,33 @@ public class WebSocketHandler {
 
 
             var message = String.format("joinied game:  " + observeCommandUsername);
+            var notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
+            connections.broadcast(authToken, gameID, notification);
+
+
+        } catch (IOException e){
+            System.out.println("Something went wrong in websocket handler observe: " + e);
+        }
+    }
+
+    private void move(Connection conn, String msg) {
+        try{
+            MakeMoveCommand makeMoveCommand = new Gson().fromJson(msg, MakeMoveCommand.class);
+            String authToken = makeMoveCommand.getAuthString();
+            Integer gameID = makeMoveCommand.getGameID();
+            ChessMove move = makeMoveCommand.getMove();
+            GameData game = myGameDAO.getGame(gameID);
+
+            //Server verifies the validity of the move.
+            //Game is updated to represent the move. Game is updated in the database.
+
+
+            LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, myGameDAO.getGame(makeMoveCommand.getGameID()));
+            //Server sends a LOAD_GAME message back to the root client.
+            connections.rootusersend(authToken, gameID, loadGameMessage);
+            connections.broadcast(authToken, gameID, loadGameMessage);
+
+            var message = String.format("Move made:  " + move.toString());
             var notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
             connections.broadcast(authToken, gameID, notification);
 
