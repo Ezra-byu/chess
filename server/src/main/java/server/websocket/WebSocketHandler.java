@@ -154,7 +154,6 @@ public class WebSocketHandler {
             ChessGame myGame = game.game();
 
             //Server verifies the validity of the move.
-
             //Game is updated to represent the move. Game is updated in the database.
             try {
                 myGame.makeMove(move);
@@ -163,6 +162,8 @@ public class WebSocketHandler {
                 connections.rootusersend(authToken, gameID, errorMessage);
                 return;
             }
+            //verify teamcolor is the same color as the piece to be moved
+            if myGame.getTeamTurn() !=
 
 
             LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, myGameDAO.getGame(makeMoveCommand.getGameID()));

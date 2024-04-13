@@ -82,6 +82,11 @@ public class ChessGame {
         gameBoard.addPiece(move.getEndPosition(), removedPiece);
     }
 
+    public boolean verifyCorrectColorMovePiece(ChessMove move){
+        if(gameBoard.getPiece(move.getStartPosition()).getTeamColor() != gameTeam){return false;}
+        else{return true;}
+    }
+
     /**
      * Makes a move in a chess game
      *
