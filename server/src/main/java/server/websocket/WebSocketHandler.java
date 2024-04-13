@@ -152,7 +152,23 @@ public class WebSocketHandler {
             ChessMove move = makeMoveCommand.getMove();
             GameData game = myGameDAO.getGame(gameID);
             ChessGame myGame = game.game();
+            String userName = myAuthDAO.getAuth(authToken).username();
+            var currentTurn = myGame.getTeamTurn();
 
+            if(currentTurn == ChessGame.TeamColor.WHITE){
+                if (!Objects.equals(userName, game.whiteUsername())){
+                    ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Bad move");
+                    connections.rootusersend(authToken, gameID, errorMessage);
+                    return;
+                }
+            }
+            if(currentTurn == ChessGame.TeamColor.BLACK){
+                if (!Objects.equals(userName, game.blackUsername())){
+                    ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Bad move");
+                    connections.rootusersend(authToken, gameID, errorMessage);
+                    return;
+                }
+            }
             //Server verifies the validity of the move.
             //Game is updated to represent the move. Game is updated in the database.
             try {
@@ -162,8 +178,8 @@ public class WebSocketHandler {
                 connections.rootusersend(authToken, gameID, errorMessage);
                 return;
             }
-            //verify teamcolor is the same color as the piece to be moved
-            if myGame.getTeamTurn() !=
+
+
 
 
             LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, myGameDAO.getGame(makeMoveCommand.getGameID()));
