@@ -22,7 +22,7 @@ public class TestFillUI {
 
         public static void fillUI(ChessBoard myBoard) {
             testboard = myBoard;
-            
+
             var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
             TestFillUI testFillUI = new TestFillUI();
 

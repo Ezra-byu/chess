@@ -211,7 +211,10 @@ public class Repl {
                 GameData selectedGameData = sessionGames.get(gameNum);
                 var createdGameRequest = new JoinGameRequest(null, selectedGameData.gameID());
                 serverFacade.joinGame(createdGameRequest, sessionAuth.authToken());
-                TestFillUI.main();// put in ChessBoardUIDOWN.main();
+
+                //TestFillUI.main();//was put in ChessBoardUIDOWN.main();
+                TestFillUI.fillUI(selectedGameData.game().getBoard()); //put your board in here
+
                 return ("observing game " + gameNum);
             } catch (ResponseException e) {
                 return (e.toString());
