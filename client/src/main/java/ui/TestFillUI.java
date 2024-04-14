@@ -20,10 +20,9 @@ public class TestFillUI {
         private static ChessBoard testboard;
         private static String orientation;
 
-        public static void main() {
-            testboard = new ChessBoard();
-            //remove after debugging:
-            testboard.resetBoard();
+        public static void fillUI(ChessBoard myBoard) {
+            testboard = myBoard;
+            
             var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
             TestFillUI testFillUI = new TestFillUI();
 

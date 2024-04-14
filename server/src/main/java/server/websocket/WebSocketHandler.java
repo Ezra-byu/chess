@@ -12,7 +12,6 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 //import webSocketMessages.Action;
 //import webSocketMessages.Notification;
-import server.websocket.ui.TestFillUI;
 import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.NotificationMessage;
@@ -155,7 +154,9 @@ public class WebSocketHandler {
 
 
             ChessBoard myBoard = game.game().getBoard();
-            TestFillUI.fillUI(myBoard);
+
+            //TestFillUI.fillUI(myBoard);
+            //debug helps
             //System.out.println(myBoard.toString2());
 
             if(connections.isOver(gameID)){
