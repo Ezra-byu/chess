@@ -213,6 +213,7 @@ public class Repl {
                 serverFacade.joinGame(createdGameRequest, sessionAuth.authToken());
 
                 //TestFillUI.main();//was put in ChessBoardUIDOWN.main();
+                selectedGameData.game().getBoard().toString2();
                 TestFillUI.fillUI(selectedGameData.game().getBoard()); //put your board in here
 
                 return ("observing game " + gameNum);
