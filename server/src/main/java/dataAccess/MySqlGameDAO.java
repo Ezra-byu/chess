@@ -182,9 +182,7 @@ public class MySqlGameDAO implements GameDAO{
     private String serializeGame(ChessGame game) {
         return new Gson().toJson(game);
     }
-    private ChessGame deSerializeGame(String jsonGame) {
-        return new Gson().fromJson(jsonGame, ChessGame.class);
-    }
+
 
     private void configureDatabaseForGame() throws DataAccessException {
         DatabaseManager.createDatabase();

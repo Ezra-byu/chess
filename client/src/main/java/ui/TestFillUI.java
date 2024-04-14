@@ -152,20 +152,16 @@ public class TestFillUI {
             }
         }
 
-        private static void setWhite(PrintStream out) {
-            out.print(SET_BG_COLOR_WHITE);
-            out.print(SET_TEXT_COLOR_WHITE);
-        }
+//        private static void setWhite(PrintStream out) {out.print(SET_BG_COLOR_WHITE);
+//            out.print(SET_TEXT_COLOR_WHITE);}
 
         private static void setRed(PrintStream out) {
             out.print(SET_BG_COLOR_RED);
             out.print(SET_TEXT_COLOR_RED);
         }
 
-        private static void setBlack(PrintStream out) {
-            out.print(SET_BG_COLOR_BLACK);
-            out.print(SET_TEXT_COLOR_BLACK);
-        }
+//        private static void setBlack(PrintStream out) { out.print(SET_BG_COLOR_BLACK);
+//            out.print(SET_TEXT_COLOR_BLACK);}
 
         private static void setLightGrey(PrintStream out) {
             out.print(SET_BG_COLOR_LIGHT_GREY);
@@ -177,14 +173,6 @@ public class TestFillUI {
             out.print(SET_TEXT_COLOR_DARK_GREY);
         }
 
-        private static void printPlayer(PrintStream out, String player) {
-            out.print(SET_BG_COLOR_BLACK);
-            out.print(SET_TEXT_COLOR_WHITE);
-
-            out.print(player);
-
-            setLightGrey(out);
-        }
         private static void printStandardPlayer(PrintStream out, int boardRow, int boardCol, String background) {
             String piece = "";
             String pieceColor = "black";
