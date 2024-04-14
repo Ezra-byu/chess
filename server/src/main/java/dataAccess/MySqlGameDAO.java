@@ -111,7 +111,7 @@ public class MySqlGameDAO implements GameDAO{
                 ps.setInt(4, game.gameID());
                 ps.executeUpdate();
                 //added for phase 5 debug
-                System.out.println("SQLGameDAO: update game: Database gameName " + game.gameName() + " Database white username " + game.whiteUsername()+ " Database black username: " + game.whiteUsername());
+                //System.out.println("SQLGameDAO: update game: Database gameName " + game.gameName() + " Database white username " + game.whiteUsername()+ " Database black username: " + game.whiteUsername());
 
                 return game;
             }

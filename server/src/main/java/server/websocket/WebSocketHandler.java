@@ -17,10 +17,7 @@ import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.NotificationMessage;
 import webSocketMessages.serverMessages.ServerMessage;
-import webSocketMessages.userCommands.JoinObserverCommand;
-import webSocketMessages.userCommands.JoinPlayerCommand;
-import webSocketMessages.userCommands.MakeMoveCommand;
-import webSocketMessages.userCommands.UserGameCommand;
+import webSocketMessages.userCommands.*;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -49,7 +46,7 @@ public class WebSocketHandler {
                 case JOIN_OBSERVER -> observe(conn, msg);
                 case MAKE_MOVE -> move(conn, msg);
                 case LEAVE -> leave(conn, msg);
-                //case RESIGN -> resign(conn, msg);
+                case RESIGN -> resign(conn, msg);
             }
         } else {
             //Connection.sendError(session.getRemote(), "unknown user");
@@ -161,10 +158,6 @@ public class WebSocketHandler {
             TestFillUI.fillUI(myBoard);
             //System.out.println(myBoard.toString2());
 
-            Boolean tsrue = myGame.isInCheckmate(ChessGame.TeamColor.WHITE);
-            Boolean car = myGame.isInCheckmate(ChessGame.TeamColor.BLACK);
-            Boolean whiteStale = myGame.isInStalemate(ChessGame.TeamColor.WHITE);
-            Boolean blackStale =  myGame.isInCheckmate(ChessGame.TeamColor.BLACK);
             if(myGame.isInCheck(ChessGame.TeamColor.WHITE) || myGame.isInCheck(ChessGame.TeamColor.BLACK)){
                 ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: In check");
                 connections.rootusersend(authToken, gameID, errorMessage);
@@ -214,11 +207,62 @@ public class WebSocketHandler {
         }
     }
     private void leave(Connection conn, String msg){
-        //do getgame method
-        //check white username exists
-        //check black username
+        LeaveCommand leaveCommand = new Gson().fromJson(msg, LeaveCommand.class);
+        String authToken = leaveCommand.getAuthString();
+        Integer gameID = leaveCommand.getGameID();
+        String leaveCommandUsername = myAuthDAO.getAuth(authToken).username();
+        GameData gameToLeave = myGameDAO.getGame(gameID);
 
-        //if username isn't white or black
+        if(Objects.equals(leaveCommandUsername, gameToLeave.whiteUsername())){
+            GameData gameWhiteRemoved = new GameData(gameToLeave.gameID(), null, gameToLeave.blackUsername(), gameToLeave.gameName(), gameToLeave.game());
+            myGameDAO.updateGame(gameWhiteRemoved);
+        }else if(Objects.equals(leaveCommandUsername, gameToLeave.blackUsername())){
+            GameData gameBlackRemoved = new GameData(gameToLeave.gameID(), gameToLeave.whiteUsername(), null, gameToLeave.gameName(), gameToLeave.game());
+            myGameDAO.updateGame(gameBlackRemoved);
+        }
+        connections.remove(authToken);
+        try {
+            var message = String.format("Has left:  " + leaveCommandUsername);
+            var notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
+            connections.broadcast(authToken, gameID, notification);
+        } catch (IOException e) {
+            System.out.println("Something went wrong in websocket handler : " + e);
+        }
+    }
+
+    private void resign(Connection conn, String msg){
+        ResignCommand resignCommand = new Gson().fromJson(msg, ResignCommand.class);
+        String authToken = resignCommand.getAuthString();
+        Integer gameID = resignCommand.getGameID();
+        String resignCommandUsername = myAuthDAO.getAuth(authToken).username();
+        GameData gameToResign = myGameDAO.getGame(gameID);
+
+        //gameToResign.isOver(true);
+
+        if(Objects.equals(resignCommandUsername, gameToResign.whiteUsername())){
+            GameData gameWhiteRemoved = new GameData(gameToResign.gameID(), null, gameToResign.blackUsername(), gameToResign.gameName(), gameToResign.game());
+            myGameDAO.updateGame(gameWhiteRemoved);
+        }else if(Objects.equals(resignCommandUsername, gameToResign.blackUsername())){
+            GameData gameBlackRemoved = new GameData(gameToResign.gameID(), gameToResign.whiteUsername(), null, gameToResign.gameName(), gameToResign.game());
+            myGameDAO.updateGame(gameBlackRemoved);
+        }else{ //if username isn't white or black
+            try {
+                ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: you are not a player in this game");
+                connections.rootusersend(authToken, gameID, errorMessage);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        try {
+            var message = String.format("Game over. Has resigned:  " + resignCommandUsername);
+            var notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
+            connections.broadcast(authToken, gameID, notification);
+            connections.rootusersend(authToken, gameID, notification);
+        } catch (IOException e) {
+            System.out.println("Something went wrong in websocket handler : " + e);
+        }
+        connections.remove(authToken);
     }
 
 }
