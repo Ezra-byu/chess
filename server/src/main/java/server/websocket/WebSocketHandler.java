@@ -158,6 +158,16 @@ public class WebSocketHandler {
             TestFillUI.fillUI(myBoard);
             //System.out.println(myBoard.toString2());
 
+            if(connections.isOver(gameID)){
+                try {
+                    ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Game is over");
+                    connections.rootusersend(authToken, gameID, errorMessage);
+                    return;
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
             if(myGame.isInCheck(ChessGame.TeamColor.WHITE) || myGame.isInCheck(ChessGame.TeamColor.BLACK)){
                 ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: In check");
                 connections.rootusersend(authToken, gameID, errorMessage);
@@ -206,6 +216,7 @@ public class WebSocketHandler {
             System.out.println("Something went wrong in websocket handler observe: " + e);
         }
     }
+
     private void leave(Connection conn, String msg){
         LeaveCommand leaveCommand = new Gson().fromJson(msg, LeaveCommand.class);
         String authToken = leaveCommand.getAuthString();
@@ -236,8 +247,27 @@ public class WebSocketHandler {
         Integer gameID = resignCommand.getGameID();
         String resignCommandUsername = myAuthDAO.getAuth(authToken).username();
         GameData gameToResign = myGameDAO.getGame(gameID);
+        ChessGame myGame = gameToResign.game();
 
-        //gameToResign.isOver(true);
+        //Is game over?
+//        if(myGame.isOver()){
+//            try {
+//                ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Game is over");
+//                connections.rootusersend(authToken, gameID, errorMessage);
+//                return;
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+        if(connections.isOver(gameID)){
+            try {
+                ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Game is over");
+                connections.rootusersend(authToken, gameID, errorMessage);
+                return;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         if(Objects.equals(resignCommandUsername, gameToResign.whiteUsername())){
             GameData gameWhiteRemoved = new GameData(gameToResign.gameID(), null, gameToResign.blackUsername(), gameToResign.gameName(), gameToResign.game());
@@ -249,6 +279,7 @@ public class WebSocketHandler {
             try {
                 ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: you are not a player in this game");
                 connections.rootusersend(authToken, gameID, errorMessage);
+                return;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -262,6 +293,8 @@ public class WebSocketHandler {
         } catch (IOException e) {
             System.out.println("Something went wrong in websocket handler : " + e);
         }
+        //myGame.setIsOver();
+        connections.addToEndedGames(gameID);
         connections.remove(authToken);
     }
 

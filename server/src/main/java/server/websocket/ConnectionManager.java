@@ -10,15 +10,27 @@ import webSocketMessages.userCommands.JoinPlayerCommand;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionManager { //organizes session objects
 
     public final ConcurrentHashMap<String, Connection> connections = new ConcurrentHashMap<>(); //authToken, Connection(gameID, AuthToken, Session)
+    public final HashSet<Integer> endedGames = new HashSet<>(); //stores GameIDs
 
     public void add(Integer gameID, String authToken, Session session) {
         var connection = new Connection(gameID, authToken, session);
         connections.put(authToken, connection);
+    }
+
+    public void addToEndedGames(Integer gameID){
+        endedGames.add(gameID);
+    }
+    public Boolean isOver(Integer gameID){
+        if(endedGames.contains(gameID)){
+            return true;
+        }
+        return false;
     }
     public void remove(String visitorName) {
         connections.remove(visitorName);

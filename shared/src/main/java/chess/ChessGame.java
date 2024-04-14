@@ -16,6 +16,8 @@ public class ChessGame {
     private ChessPiece removedPiece;
     private Collection<ChessMove> potentialMoves = new HashSet<ChessMove>();
     private Collection<ChessPosition> kingDangerZone = new HashSet<ChessPosition>();
+
+    private Boolean isOver = false;
     public ChessGame() {
     }
 
@@ -24,6 +26,13 @@ public class ChessGame {
      */
     public TeamColor getTeamTurn() {
         return gameTeam;
+    }
+
+    public void setIsOver(){
+        isOver = true;
+    }
+    public Boolean isOver(){
+        return isOver;
     }
 
     /**
@@ -171,7 +180,10 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
         ///if valid moves is empty for all teamColor Postitions (stalemate) and (is in check)
-        if (isInCheck(teamColor) && isInStalemate(teamColor)){return true;}
+        if (isInCheck(teamColor) && isInStalemate(teamColor)){
+            setIsOver();
+            return true;
+        }
         else {return false;}
     }
 
@@ -200,6 +212,7 @@ public class ChessGame {
                 }
             }
         }
+        setIsOver();
         return true;
     }
 
