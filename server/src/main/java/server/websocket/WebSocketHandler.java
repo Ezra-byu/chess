@@ -161,7 +161,7 @@ public class WebSocketHandler {
 
             if(connections.isOver(gameID)){
                 try {
-                    ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Game is over");
+                    ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Game is over. You can't move");
                     connections.rootusersend(authToken, gameID, errorMessage);
                     return;
                 } catch (IOException e) {
@@ -250,20 +250,10 @@ public class WebSocketHandler {
         GameData gameToResign = myGameDAO.getGame(gameID);
         ChessGame myGame = gameToResign.game();
 
-        //Is game over?
-//        if(myGame.isOver()){
-//            try {
-//                ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Game is over");
-//                connections.rootusersend(authToken, gameID, errorMessage);
-//                return;
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
         if(connections.isOver(gameID)){
             try {
-                ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Game is over");
-                connections.rootusersend(authToken, gameID, errorMessage);
+                ErrorMessage errorMessageResign = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Game is over. You can't resign.");
+                connections.rootusersend(authToken, gameID, errorMessageResign);
                 return;
             } catch (IOException e) {
                 throw new RuntimeException(e);

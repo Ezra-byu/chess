@@ -3,9 +3,7 @@ package dataAccess;
 import chess.ChessBoard;
 import chess.ChessGame;
 import com.google.gson.Gson;
-import exception.ResponseException;
 import model.GameData;
-import model.UserData;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -18,7 +16,7 @@ public class MySqlGameDAO implements GameDAO{
     private int nextId = 1;//put in constructor?
     public MySqlGameDAO() {
         try {
-            configureDatabase(); //creates db & tables if not created
+            configureDatabaseForGame(); //creates db & tables if not created
         }
         catch (DataAccessException e){
             System.out.println("Something went wrong." + e);
@@ -188,12 +186,12 @@ public class MySqlGameDAO implements GameDAO{
         return new Gson().fromJson(jsonGame, ChessGame.class);
     }
 
-    private void configureDatabase() throws DataAccessException {
+    private void configureDatabaseForGame() throws DataAccessException {
         DatabaseManager.createDatabase();
         try (var conn = DatabaseManager.getConnection()) {
             for (var statement : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
+                try (var preparedStatementGame = conn.prepareStatement(statement)) {
+                    preparedStatementGame.executeUpdate();
                 }
             }
         } catch (SQLException ex) {

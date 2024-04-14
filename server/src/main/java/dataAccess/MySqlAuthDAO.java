@@ -13,7 +13,7 @@ import static java.sql.Types.NULL;
 public class MySqlAuthDAO implements AuthDAO{
     public MySqlAuthDAO() {
         try {
-            configureDatabase(); //creates db & tables if not created
+            configureDatabaseForAuth(); //creates db & tables if not created
         }
         catch (DataAccessException e){
             System.out.println("Something went wrong." + e);
@@ -129,12 +129,12 @@ public class MySqlAuthDAO implements AuthDAO{
     };
 
 
-    private void configureDatabase() throws DataAccessException {
+    private void configureDatabaseForAuth() throws DataAccessException {
         DatabaseManager.createDatabase();
         try (var conn = DatabaseManager.getConnection()) {
             for (var statement : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
+                try (var preparedStatementAuth = conn.prepareStatement(statement)) {
+                    preparedStatementAuth.executeUpdate();
                 }
             }
         } catch (SQLException ex) {

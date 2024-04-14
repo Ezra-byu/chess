@@ -61,15 +61,6 @@ public class TestFillUI {
             out.print(EMPTY.repeat(suffixLength));
         }
 
-        private static void drawSider(PrintStream out, String headerText) {
-            int prefixLength = SQUARE_SIZE_IN_CHARS / 2;
-            int suffixLength = SQUARE_SIZE_IN_CHARS - prefixLength - 1;
-
-            out.print(EMPTY.repeat(prefixLength));
-            printHeaderText(out, headerText);
-            out.print(EMPTY.repeat(suffixLength));
-        }
-
         private static void printHeaderText(PrintStream out, String player) {
             out.print(SET_BG_COLOR_BLACK);
             out.print(SET_TEXT_COLOR_GREEN);
