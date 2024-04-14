@@ -20,7 +20,7 @@ public class TestFillUI {
         private static ChessBoard testboard;
         private static String orientation;
 
-        public static void main(ChessBoard myBoard) {
+        public static void fillUI(ChessBoard myBoard) {
             testboard = myBoard;
             //remove after debugging:
             //testboard.resetBoard();

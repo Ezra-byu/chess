@@ -48,7 +48,7 @@ public class WebSocketHandler {
                 case JOIN_PLAYER -> join(conn, msg);
                 case JOIN_OBSERVER -> observe(conn, msg);
                 case MAKE_MOVE -> move(conn, msg);
-                //case LEAVE -> leave(conn, msg);
+                case LEAVE -> leave(conn, msg);
                 //case RESIGN -> resign(conn, msg);
             }
         } else {
@@ -156,11 +156,13 @@ public class WebSocketHandler {
             String userName = myAuthDAO.getAuth(authToken).username();
             var currentTurn = myGame.getTeamTurn();
 
-            ChessBoard myBoard = game.game().getBoard();
-            System.out.println(myBoard.toString2());
 
-            var tsrue = myGame.isInCheckmate(ChessGame.TeamColor.WHITE);
-            var car = myGame.isInCheckmate(ChessGame.TeamColor.BLACK);
+            ChessBoard myBoard = game.game().getBoard();
+            TestFillUI.fillUI(myBoard);
+            //System.out.println(myBoard.toString2());
+
+            Boolean tsrue = myGame.isInCheckmate(ChessGame.TeamColor.WHITE);
+            Boolean car = myGame.isInCheckmate(ChessGame.TeamColor.BLACK);
             Boolean whiteStale = myGame.isInStalemate(ChessGame.TeamColor.WHITE);
             Boolean blackStale =  myGame.isInCheckmate(ChessGame.TeamColor.BLACK);
             if(myGame.isInCheck(ChessGame.TeamColor.WHITE) || myGame.isInCheck(ChessGame.TeamColor.BLACK)){
@@ -188,6 +190,7 @@ public class WebSocketHandler {
             //Game is updated to represent the move. Game is updated in the database.
             try {
                 myGame.makeMove(move);
+                myGameDAO.updateGame(game);
             } catch (InvalidMoveException e) {
                 ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: Bad move");
                 connections.rootusersend(authToken, gameID, errorMessage);
@@ -210,6 +213,12 @@ public class WebSocketHandler {
             System.out.println("Something went wrong in websocket handler observe: " + e);
         }
     }
+    private void leave(Connection conn, String msg){
+        //do getgame method
+        //check white username exists
+        //check black username
 
+        //if username isn't white or black
+    }
 
 }
