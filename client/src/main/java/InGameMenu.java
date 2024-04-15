@@ -93,7 +93,8 @@ public class InGameMenu implements NotificationHandler {
     public String redraw(){
         GameData sessionGame = myGameDAO.getGame(gameID);
         ChessBoard myBoard = sessionGame.game().getBoard();
-        if colorTestFillUI.fillUI(myBoard);
+        if(color.equalsIgnoreCase("black")){TestFillUI.fillUI(myBoard);}
+        else{TestFillUI.fillUI(myBoard);}
         return "Board has been drawn";
         //debug helps
         //System.out.println(myBoard.toString2());
