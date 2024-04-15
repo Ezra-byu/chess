@@ -1,34 +1,43 @@
 
 //georgewash martha
+import com.google.gson.Gson;
 import exception.ResponseException;
 import model.AuthData;
 import model.GameData;
 import model.JoinGameRequest;
 import model.UserData;
 import serverFacade.ServerFacade;
-
+import webSocket.NotificationHandler;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
 
 import ui.TestFillUI;
+import webSocket.WebSocketFacade;
+import webSocketMessages.serverMessages.NotificationMessage;
+import webSocketMessages.serverMessages.ServerMessage;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-public class Repl {
+public class Repl implements NotificationHandler{
 //    private final PostLoginMenu postLogin;
 //    private final PreLoginMenu preLogin;
     private State state = State.SIGNEDOUT;
-    private GameState gamestate = GameState.NOTINGAME;
+    private GamePLayState gamePlayState = GamePLayState.NOTINGAME;
     static ServerFacade serverFacade;
+    private final String serverUrl;
+
     AuthData sessionAuth;
     Integer sessionGameInt = 0;
     HashMap<Integer, GameData> sessionGames= new HashMap<Integer, GameData>();
 
     public Repl(String serverUrl) {
         serverFacade = new ServerFacade(serverUrl);
+        this.serverUrl = serverUrl;
+
         sessionGameInt = 0;
         state = State.SIGNEDOUT;
+        gamePlayState = GamePLayState.NOTINGAME;
 
     }
 
@@ -65,7 +74,6 @@ public class Repl {
                 case "listgames" -> listGames();
                 case "joingame" -> joinGame(params);
                 case "joinobserver" -> observeGame(params);
-//                case "adoptall" -> adoptAllPets();
             case "quit" -> "quit";
             default -> help();
         };
@@ -189,10 +197,12 @@ public class Repl {
                 //In phase 6 websocket server send LOAD_GAME which takes care of this
 //                ChessBoardUIUP.main();
 //                ChessBoardUIDOWN.main();
-                //Open a WebSocket connection with the server (using the /connect endpoint) so it can send and receive gameplay messages.
+                InGameMenu inGameMenu = new InGameMenu(serverUrl, selectedGameData.gameID(), sessionAuth, color);
+                inGameMenu.run();
+                gamePlayState = GamePLayState.INGAME;
 
 
-                return ("game " + gameNum + " " + selectedGameData.gameName() + " joined");
+                return ("game " + gameNum + " " + selectedGameData.gameName() + " joined and left");
             } catch (ResponseException e) {
                 return (e.toString());
             }
@@ -243,8 +253,15 @@ public class Repl {
                 - joinobserver <#>
                 """;
     }
+
     private void printPrompt() {
         System.out.print("\n" + "\u001b[" + "0m" + ">>> ");
     }
 
+    @Override
+    public void notify(String message) {
+        ServerMessage serverMessage= new Gson().fromJson(message, ServerMessage.class);
+        System.out.print(message);
+
+    }
 }

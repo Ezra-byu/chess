@@ -1,10 +1,13 @@
 package webSocket;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import exception.ResponseException;
 
 //import webSocketMessages.Action;
 import webSocketMessages.serverMessages.NotificationMessage;
+import webSocketMessages.userCommands.JoinObserverCommand;
+import webSocketMessages.userCommands.JoinPlayerCommand;
 import webSocketMessages.userCommands.UserGameCommand;
 //import webSocketMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
@@ -36,8 +39,7 @@ public class WebSocketFacade extends Endpoint {
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
-                    NotificationMessage notification = new Gson().fromJson(message, NotificationMessage.class);
-                    notificationHandler.notify(notification);
+                    notificationHandler.notify(message);
                 }
 //                public void onMessage(String message) { System.out.println(message); }
             });
@@ -51,6 +53,22 @@ public class WebSocketFacade extends Endpoint {
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
 
+    public void wsObserve(String visitorAuthToken, Integer gameID) throws ResponseException {
+        try {
+            var command = new JoinObserverCommand(visitorAuthToken, gameID);
+            this.session.getBasicRemote().sendText(new Gson().toJson(command));
+        } catch (IOException ex) {
+            throw new ResponseException(500, ex.getMessage());
+        }
+    }
+    public void wsJoin(String visitorAuthToken, Integer gameID, ChessGame.TeamColor playerColor) throws ResponseException {
+        try {
+            var command = new JoinPlayerCommand(visitorAuthToken, gameID, playerColor);
+            this.session.getBasicRemote().sendText(new Gson().toJson(command));
+        } catch (IOException ex) {
+            throw new ResponseException(500, ex.getMessage());
+        }
+    }
 
 }
 

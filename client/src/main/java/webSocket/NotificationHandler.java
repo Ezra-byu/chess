@@ -4,5 +4,5 @@ package webSocket;
 import webSocketMessages.serverMessages.NotificationMessage;
 
 public interface NotificationHandler {
-    void notify(NotificationMessage notification);//sends to the repl
+    void notify(String message);//sends to the repl
 }
