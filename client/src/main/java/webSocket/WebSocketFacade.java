@@ -8,6 +8,7 @@ import exception.ResponseException;
 import webSocketMessages.serverMessages.NotificationMessage;
 import webSocketMessages.userCommands.JoinObserverCommand;
 import webSocketMessages.userCommands.JoinPlayerCommand;
+import webSocketMessages.userCommands.LeaveCommand;
 import webSocketMessages.userCommands.UserGameCommand;
 //import webSocketMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
@@ -53,6 +54,14 @@ public class WebSocketFacade extends Endpoint {
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
 
+    public void wsLeave(String visitorAuthToken, Integer gameID) throws ResponseException {
+        try {
+            var command = new LeaveCommand(visitorAuthToken, gameID);
+            this.session.getBasicRemote().sendText(new Gson().toJson(command));
+        } catch (IOException ex) {
+            throw new ResponseException(500, ex.getMessage());
+        }
+    }
     public void wsObserve(String visitorAuthToken, Integer gameID) throws ResponseException {
         try {
             var command = new JoinObserverCommand(visitorAuthToken, gameID);
@@ -61,6 +70,7 @@ public class WebSocketFacade extends Endpoint {
             throw new ResponseException(500, ex.getMessage());
         }
     }
+
     public void wsJoin(String visitorAuthToken, Integer gameID, ChessGame.TeamColor playerColor) throws ResponseException {
         try {
             var command = new JoinPlayerCommand(visitorAuthToken, gameID, playerColor);

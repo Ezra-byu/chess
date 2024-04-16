@@ -131,7 +131,7 @@ public class WebSocketHandler {
             connections.rootusersend(authToken, gameID, loadGameMessage);
 
 
-            var message = String.format("joinied game:  " + observeCommandUsername);
+            var message = String.format("observing game:  " + observeCommandUsername);
             var notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
             connections.broadcast(authToken, gameID, notification);
 

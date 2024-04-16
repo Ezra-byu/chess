@@ -7,6 +7,7 @@ import model.GameData;
 import model.JoinGameRequest;
 import model.UserData;
 import serverFacade.ServerFacade;
+import ui.TestFillUIDown;
 import webSocket.NotificationHandler;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -74,6 +75,8 @@ public class Repl implements NotificationHandler{
                 case "listgames" -> listGames();
                 case "joingame" -> joinGame(params);
                 case "joinobserver" -> observeGame(params);
+
+                case "drawtest" -> drawtest();
             case "quit" -> "quit";
             default -> help();
         };
@@ -102,6 +105,27 @@ public class Repl implements NotificationHandler{
         }
     }
 
+    public String drawtest(){
+        try {
+            var gameList = serverFacade.listGames(sessionAuth.authToken());
+            sessionGames.clear();
+            sessionGameInt = 0;
+            for (int i = 0; i < gameList.length; i++) {
+                sessionGameInt += 1;
+                sessionGames.put(sessionGameInt, gameList[i]);
+            }
+        } catch (ResponseException e) {
+            return (e.toString());
+        }
+        GameData selectedGameData = sessionGames.get(1);
+        //var createdGameRequest = new JoinGameRequest(null, selectedGameData.gameID());
+
+        //TestFillUI.main();//was put in ChessBoardUIDOWN.main();
+        selectedGameData.game().getBoard().toString2();
+        TestFillUI.fillUI(selectedGameData.game().getBoard()); //put your board in here
+        TestFillUIDown.fillUI(selectedGameData.game().getBoard());
+        return "test over";
+    }
     public String logIn(String... params){
         if (state == State.SIGNEDIN) {
             return "Can not perform command";
@@ -223,10 +247,11 @@ public class Repl implements NotificationHandler{
                 serverFacade.joinGame(createdGameRequest, sessionAuth.authToken());
 
                 //TestFillUI.main();//was put in ChessBoardUIDOWN.main();
-                selectedGameData.game().getBoard().toString2();
-                TestFillUI.fillUI(selectedGameData.game().getBoard()); //put your board in here
+                InGameMenu inGameMenu = new InGameMenu(serverUrl, selectedGameData.gameID(), sessionAuth, null);
+                inGameMenu.run();
+                gamePlayState = GamePLayState.INGAME;
 
-                return ("observing game " + gameNum);
+                return ("observed and left game " + gameNum);
             } catch (ResponseException e) {
                 return (e.toString());
             }
